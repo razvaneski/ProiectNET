@@ -1,0 +1,28 @@
+﻿<h2>Adaugare produs</h2>
+
+<br/>
+
+<form method="post" action="/Products/Add">
+    <label>Nume produs</label>
+    <input type="text" name="Name"/>
+    <br/>
+    
+    <label>Descriere</label>
+    <input type="text" name="Description"/>
+    <br/>
+    
+    <label>Pret</label>
+    <input type="number" name="Price" />
+    <br />
+
+    <label>Categorie</label>
+    <select name="CategoryID">
+        @foreach (var category in ViewBag.Categories)
+        {
+            <option value="@category.CategoryID">@category.Name</option>
+        }
+    </select>
+    <br/>
+
+    <button class="btn btn-success" type="submit">Adauga produs</button>
+</form>
