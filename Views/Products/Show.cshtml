@@ -4,17 +4,12 @@
 
 <h3>Produs @Model.Name</h3>
 
-@if(User.IsInRole("Admin"))
+
+@if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && UserManager.GetUserId(User) == Model.UserID))
 {
     <form method="post" action="/Products/Delete/@Model.ProductID">
-        <button type="submit">Sterge produs</button>    
+        <button class="btn btn-primary" type="submit">Sterge produs</button>
     </form>
-    <a href="/Products/Edit/@Model.ProductID">Editeaza</a>
-}
-else if(User.IsInRole("Colaborator") && UserManager.GetUserId(User) == Model.UserID)
-{
-    <form method="post" action="/Products/Delete/@Model.ProductID">
-        <button type="submit">Sterge produs (colaborator)</button>
-    </form>
-    <a href="/Products/Edit/@Model.ProductID">Editeaza</a>
+    <br />
+    <a class="btn btn-primary" href="/Products/Edit/@Model.ProductID">Editeaza</a>
 }

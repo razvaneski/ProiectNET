@@ -43,23 +43,32 @@ namespace StoreProject.Controllers
         [HttpPost]
         public IActionResult Add(Product product)
         {
-            try
+            if (User.IsInRole("Admin") || _userManager.GetUserId(User) == product.UserID)
             {
-                product.ProductID = Guid.NewGuid().ToString();
-                product.UserID = _userManager.GetUserId(User);
-                db.Products.Add(product);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    product.ProductID = Guid.NewGuid().ToString();
+                    product.UserID = _userManager.GetUserId(User);
+                    db.Products.Add(product);
+                    db.SaveChanges();
+                    TempData["Success"] = "Produs adaugat cu succes!";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
+                    return RedirectToAction("Add");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return RedirectToAction("Add");
+                return Unauthorized();
             }
         }
 
         public IActionResult Show(string id)
         {
-            Product product = db.Products.Include("User").First(prod => prod.ProductID == id);
+            var product = db.Products.Include("User").FirstOrDefault(prod => prod.ProductID == id);
             if (product == null)
             {
                 return NotFound();
@@ -83,10 +92,12 @@ namespace StoreProject.Controllers
                 {
                     db.Remove(product);
                     db.SaveChanges();
+                    TempData["Success"] = "Produs sters cu succes!";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
+                    TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
                     return RedirectToAction("Show/{id}");
                 }
             }
@@ -131,10 +142,12 @@ namespace StoreProject.Controllers
                     oldProduct.Description = newProduct.Description;
                     oldProduct.CategoryID = newProduct.CategoryID;
                     db.SaveChanges();
+                    TempData["Success"] = "Produs modificat cu succes!";
                     return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
+                    TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
                     return RedirectToAction("Edit/{product.ProductID}");
                 }
             }

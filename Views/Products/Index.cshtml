@@ -1,6 +1,36 @@
-﻿@foreach (var product in ViewBag.Products)
+﻿@using Microsoft.AspNetCore.Identity
+@model StoreProject.Models.Product
+@inject UserManager<ApplicationUser> UserManager
+
+
+<h3>Produse</h3>
+<br />
+
+@if(TempData["Message"] != null)
 {
-    <div class="card" style="width: 18rem;">
+    <div class="alert alert-primary" role="alert">
+        @TempData["Message"]
+    </div>
+    <br />
+}
+@if(TempData["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["Error"]
+    </div>
+    <br />
+}
+@if(TempData["Success"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Success"]
+    </div>
+    <br />
+}
+
+@foreach (var product in ViewBag.Products)
+{
+    <div class="card">
         <div class="card-body">
             <h5 class="card-title">@product.Name</h5>
             <p class="card-text">@product.Description</p>
@@ -8,4 +38,9 @@
             <a href="/Products/Show/@product.ProductID" class="btn btn-primary">Vezi produsul</a>
         </div>
     </div>
+    <br />
+}
+@if(User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+{
+    <a class="btn btn-primary" href="/Products/Add">Adauga produs</a>
 }
