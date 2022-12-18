@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Versioning;
 using StoreProject.Data;
 using StoreProject.Models;
 
@@ -50,9 +51,96 @@ namespace StoreProject.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return RedirectToAction("Add");
+            }
+        }
+
+        public IActionResult Show(string id)
+        {
+            Product product = db.Products.Include("User").First(prod => prod.ProductID == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        [Authorize(Roles = "Colaborator,Admin")]
+        [HttpPost]
+        public IActionResult Delete(string id)
+        {
+            Product product = db.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            if(User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == product.UserID))
+            {
+                try
+                {
+                    db.Remove(product);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    return RedirectToAction("Show/{id}");
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize(Roles = "Colaborator,Admin")]
+        public IActionResult Edit(string id)
+        {
+            var categories = db.Categories;
+            ViewBag.Categories = categories;
+
+            Product product = db.Products.Include("Category").First(prod => prod.ProductID == id);
+            if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == product.UserID))
+            {
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                return View(product);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize(Roles = "Colaborator,Admin")]
+        [HttpPost]
+        public IActionResult Edit(string id, Product newProduct)
+        {
+            Product oldProduct = db.Products.Find(id);
+            if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == oldProduct.UserID))
+            {
+                try
+                {
+                    oldProduct.Name = newProduct.Name;
+                    oldProduct.Price = newProduct.Price;
+                    oldProduct.Description = newProduct.Description;
+                    oldProduct.CategoryID = newProduct.CategoryID;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    return RedirectToAction("Edit/{product.ProductID}");
+                }
+            }
+            else
+            {
+                return Unauthorized();
             }
         }
     }
