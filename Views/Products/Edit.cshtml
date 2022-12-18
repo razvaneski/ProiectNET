@@ -21,8 +21,14 @@
     <select name="CategoryID">
         @foreach (var category in ViewBag.Categories)
         {
-            var selected = category.CategoryID == Model.CategoryID ? "selected" : "";
-            <option value="@category.CategoryID" selected="@selected">@category.Name</option>
+            @if(Model.CategoryID == category.CategoryID)
+            {
+                <option value="@category.CategoryID" selected="selected">@category.Name</option>
+            }
+            else
+            {
+                <option value="@category.CategoryID">@category.Name</option>
+            }
         }
     </select>
     <br />

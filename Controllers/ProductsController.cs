@@ -68,7 +68,11 @@ namespace StoreProject.Controllers
 
         public IActionResult Show(string id)
         {
-            var product = db.Products.Include("User").FirstOrDefault(prod => prod.ProductID == id);
+            var product = db.Products
+                .Include("User")
+                .Include("Category")
+                .Include("Reviews")
+                .FirstOrDefault(prod => prod.ProductID == id);
             if (product == null)
             {
                 return NotFound();

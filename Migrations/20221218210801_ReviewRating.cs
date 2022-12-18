@@ -4,7 +4,7 @@
 
 namespace StoreProject.Migrations
 {
-    public partial class ProductId : Migration
+    public partial class ReviewRating : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
