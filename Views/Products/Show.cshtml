@@ -2,75 +2,102 @@
 @model StoreProject.Models.Product
 @inject UserManager<ApplicationUser> UserManager
 
-<h3>Produs @Model.Name</h3>
 
+<div class="d-flex flex-column justify-content-md-start border border-1" style="padding:3px">
 
-@if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && UserManager.GetUserId(User) == Model.UserID))
-{
-    <form method="post" action="/Products/Delete/@Model.ProductID">
-        <button class="btn btn-primary" type="submit">Sterge produs</button>
-    </form>
-    <br />
-    <a class="btn btn-primary" href="/Products/Edit/@Model.ProductID">Editeaza</a>
-}
-
-<dl class="row">
-    <dt class="col-sm-3">Nume</dt>
-    <dd class="col-sm-9">@Model.Name</dd>
-
-    <dt class="col-sm-3">Descriere</dt>
-    <dd class="col-sm-9">@Model.Description</dd>
-
-    <dt class="col-sm-3">Pret</dt>
-    <dd class="col-sm-9">@Model.Price</dd>
-
-    <dt class="col-sm-3">Categorie</dt>
-    <dd class="col-sm-9">@Model.Category.Name</dd>
-</dl>
-
-<br />
-
-@if(Model.Rating == 0)
-{
-    <p>Acest produs nu are recenzii</p>
-}
-else 
-{
-    <p>Rating produs: @Model.Rating / 5</p>
-}
-
-<br />
-@if(Model.Reviews != null)
-{
-    @foreach (var review in Model.Reviews)
+    @if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && UserManager.GetUserId(User) == Model.UserID))
     {
-        <div>
-            <p>@review.Title</p>
-            <p>@review.Content</p>
-            @if(User.IsInRole("Admin") || UserManager.GetUserId(User) == review.UserID)
-            {
-                <form method="post" action="/Reviews/Delete/@review.ReviewID">
-                    <button tyoe="submit">Sterge review</button>
-                </form>
-            }
+        <div class="d-flex flex-row" style="gap: 2px">
+            <form method="post" action="/Products/Delete/@Model.ProductID">
+                <button class="btn btn-danger" type="submit">Sterge produs</button>
+            </form>
+            <a class="btn btn-primary" href="/Products/Edit/@Model.ProductID">Editeaza</a>
         </div>
-        <br />
+
     }
+
+    <h3 style="margin-bottom:50px;margin-top:10px; background: #95B6DB; padding: 25px">@Model.Name</h3>
+
+    @if (Model.Rating == 0)
+    {
+        <p style="background-color: #72A5DD; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: bold">Acest produs nu are recenzii</p>
+    }
+    else
+    {
+        <p style="background-color: #72A5DD; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: bold">Rating produs: @Model.Rating / 5 ⭐</p>
+    }
+
+    <dl class="row">
+        <dt class="col-sm-3">Descriere</dt>
+        <dd class="col-sm-9">@Model.Description</dd>
+
+        <dt class="col-sm-3">Pret</dt>
+        <dd class="col-sm-9">@Model.Price</dd>
+
+        <dt class="col-sm-3">Categorie</dt>
+        <dd class="col-sm-9">@Model.Category.Name</dd>
+    </dl>
+</div>
+
+
+
+
+@if(Model.Rating != 0)
+{
+    <div class="d-flex flex-column border border-1" style="padding: 10px; margin-bottom: 30px; margin-top: 30px">
+        <h1>Recenzii</h1>
+        @foreach (var review in Model.Reviews)
+        {
+            <div class="border border-1" style="margin-top: 5px; padding: 20px">
+                <p style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: bold"><span style="text-decoration: underline; text-transform: uppercase">@review.Title</span> (@review.Rating / 5 ⭐)</p>
+                <p>@review.Content</p>
+                @if (User.IsInRole("Admin") || UserManager.GetUserId(User) == review.UserID)
+                {
+                    <form method="post" action="/Reviews/Delete/@review.ReviewID">
+                        <button tyoe="submit" class="btn btn-danger">Sterge recenzie</button>
+                    </form>
+                }
+            </div>
+        }
+    </div>
+    
 }
+   
 
-<h1>Adauga recenzie</h1>
-<br />
-<form method="post" action="/Reviews/Add/@Model.ProductID">
-    <label>Nota</label>
-    <input type="number" name="Rating" min="1" max="5" value="5" />
+@if(Model.Rating == 0){
+    <div class="d-flex flex-column" style="width: 60%">
+        <h3>Fii primul care lasa o recenzie</h3>
+        <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
 
-    <label>Titlu</label>
-    <input type="text" name="Title" />
-    <br />
+            <div>
+                <label>Nota</label>
+                <input type="number" name="Rating" min="1" max="5" value="5" />
+            </div>
 
-    <label>Continut</label>
-    <input type="text" name="Content" />
-    <br />
+            <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei"/>
 
-    <button type="submit">Adauga recenzie</button>
-</form>
+            <textarea name="Content" placeholder="Text" rows="3"></textarea>
+
+            <button type="submit">Adauga recenzie</button>
+        </form>
+    </div>
+    
+}
+else{
+    <div class="d-flex flex-column" style="width: 60%">
+        <h3>Lasa o recenzie</h3>
+        <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
+            <div>
+                <label>Nota</label>
+                <input type="number" name="Rating" min="1" max="5" value="5" />
+            </div>
+            
+
+            <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
+
+            <textarea name="Content" placeholder="Text" rows="3"></textarea>
+
+            <button type="submit">Adauga recenzie</button>
+        </form>
+    </div>
+}

@@ -2,27 +2,26 @@
 
 <br/>
 
-<form method="post" action="/Products/Add">
+<form method="post" action="/Products/Add" class="d-flex flex-column" style="width:70%; gap:5px">
     <label>Nume produs</label>
     <input type="text" name="Name"/>
-    <br/>
     
     <label>Descriere</label>
-    <input type="text" name="Description"/>
-    <br/>
+    <textarea name="Description"></textarea>
+    <div>
+        <label>Pret</label>
+        <input type="number" name="Price" />
+    </div>
+    <div>
+        <label>Categorie</label>
+        <select name="CategoryID">
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.CategoryID">@category.Name</option>
+            }
+        </select>
+    </div>
     
-    <label>Pret</label>
-    <input type="number" name="Price" />
-    <br />
 
-    <label>Categorie</label>
-    <select name="CategoryID">
-        @foreach (var category in ViewBag.Categories)
-        {
-            <option value="@category.CategoryID">@category.Name</option>
-        }
-    </select>
-    <br/>
-
-    <button class="btn btn-success" type="submit">Adauga produs</button>
+    <button class="btn btn-success" style="width:fit-content;margin-top: 50px;padding:5px" type="submit">Adauga produs</button>
 </form>

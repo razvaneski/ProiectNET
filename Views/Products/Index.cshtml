@@ -3,22 +3,53 @@
 @inject UserManager<ApplicationUser> UserManager
 
 
-<h3>Produse</h3>
+<h3 class="text-lg-center">Produse</h3>
 <br />
-
-@foreach (var product in ViewBag.Products)
-{
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">@product.Name</h5>
-            <p class="card-text">@product.Description</p>
-            <p>@product.Price</p>
-            <a href="/Products/Show/@product.ProductID" class="btn btn-primary">Vezi produsul</a>
+<div class="d-flex flex-wrap justify-content-center">
+    @foreach (var product in ViewBag.Products)
+    {
+        <div class="card" style="width: 18rem; margin: 2px">
+            <img src="/images/question_mark.jpg" class="card-img-top" alt="coming_soon_img">
+            <div class="card-body">
+                <h5 class="card-title">@product.Name</h5>
+                <p class="card-text">@product.Description</p>
+                <p>@product.Price</p>
+            
+            </div>
+            <a href="/Products/Show/@product.ProductID" class="btn btn-primary" style="margin-bottom: 5px; margin-left: 5px; width: 8rem">Vezi produs</a>
         </div>
-    </div>
-    <br />
-}
+        <br />
+    }
+</div>
+<br />
+<div class="d-flex justify-content-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link"
+                   href="/Products/Index?page=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for (int i = 1; i <= ViewBag.lastPage; i++)
+            {
+                <li class="page-item">
+                    <a class="page-link"href="/Products/Index?page=@i">@(i)</a>
+                </li>
+            }
+            <li class="page-item">
+                <a class="page-link"
+                   href="/Products/Index?page=@(ViewBag.lastPage)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
 @if(User.IsInRole("Admin") || User.IsInRole("Colaborator"))
 {
-    <a class="btn btn-primary" href="/Products/Add">Adauga produs</a>
+    <div class="d-flex flex-column justify-content-center">
+        <a class="btn btn-primary" href="/Products/Add" style="width: 10rem">Adauga produs</a>
+    </div>
 }

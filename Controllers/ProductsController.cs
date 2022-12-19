@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Versioning;
 using StoreProject.Data;
 using StoreProject.Models;
+using System.Text.RegularExpressions;
 
 namespace StoreProject.Controllers
 {
@@ -26,9 +28,30 @@ namespace StoreProject.Controllers
         }
         public IActionResult Index()
         {
+            int _perPage = 6;
+
             var products = db.Products.Include("Category");
+
             ViewBag.Products = products;
+
+            int totalItems = products.Count();
+
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+
+            var offset = 0;
+
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+
+            var paginatedArticles = products.Skip(offset).Take(_perPage);
+
+            ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+
+            ViewBag.Articles = paginatedArticles;
             return View();
+
         }
 
         [Authorize(Roles = "Colaborator,Admin")]
@@ -73,6 +96,7 @@ namespace StoreProject.Controllers
                 .Include("Category")
                 .Include("Reviews")
                 .FirstOrDefault(prod => prod.ProductID == id);
+ 
             if (product == null)
             {
                 return NotFound();
