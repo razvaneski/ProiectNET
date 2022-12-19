@@ -6,28 +6,6 @@
 <h3>Produse</h3>
 <br />
 
-@if(TempData["Message"] != null)
-{
-    <div class="alert alert-primary" role="alert">
-        @TempData["Message"]
-    </div>
-    <br />
-}
-@if(TempData["Error"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["Error"]
-    </div>
-    <br />
-}
-@if(TempData["Success"] != null)
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["Success"]
-    </div>
-    <br />
-}
-
 @foreach (var product in ViewBag.Products)
 {
     <div class="card">

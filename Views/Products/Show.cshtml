@@ -13,3 +13,64 @@
     <br />
     <a class="btn btn-primary" href="/Products/Edit/@Model.ProductID">Editeaza</a>
 }
+
+<dl class="row">
+    <dt class="col-sm-3">Nume</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Descriere</dt>
+    <dd class="col-sm-9">@Model.Description</dd>
+
+    <dt class="col-sm-3">Pret</dt>
+    <dd class="col-sm-9">@Model.Price</dd>
+
+    <dt class="col-sm-3">Categorie</dt>
+    <dd class="col-sm-9">@Model.Category.Name</dd>
+</dl>
+
+<br />
+
+@if(Model.Rating == 0)
+{
+    <p>Acest produs nu are recenzii</p>
+}
+else 
+{
+    <p>Rating produs: @Model.Rating / 5</p>
+}
+
+<br />
+@if(Model.Reviews != null)
+{
+    @foreach (var review in Model.Reviews)
+    {
+        <div>
+            <p>@review.Title</p>
+            <p>@review.Content</p>
+            @if(User.IsInRole("Admin") || UserManager.GetUserId(User) == review.UserID)
+            {
+                <form method="post" action="/Reviews/Delete/@review.ReviewID">
+                    <button tyoe="submit">Sterge review</button>
+                </form>
+            }
+        </div>
+        <br />
+    }
+}
+
+<h1>Adauga recenzie</h1>
+<br />
+<form method="post" action="/Reviews/Add/@Model.ProductID">
+    <label>Nota</label>
+    <input type="number" name="Rating" min="1" max="5" value="5" />
+
+    <label>Titlu</label>
+    <input type="text" name="Title" />
+    <br />
+
+    <label>Continut</label>
+    <input type="text" name="Content" />
+    <br />
+
+    <button type="submit">Adauga recenzie</button>
+</form>
