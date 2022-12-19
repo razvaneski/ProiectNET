@@ -24,21 +24,23 @@ namespace StoreProject.Controllers
         }
 
         [Authorize(Roles = "User,Colaborator,Admin")]
-        public IActionResult Add(string productID, Review review)
+        [HttpPost]
+        public IActionResult Add(string id, Review review)
         {
             review.UserID = _userManager.GetUserId(User);
             review.ReviewID = Guid.NewGuid().ToString();
+            review.ProductID = id;
             try
             {
                 db.Reviews.Add(review);
                 db.SaveChanges();
                 TempData["Success"] = "Recenzia a fost adaugata cu succes!";
-                return RedirectToAction("Show", "Products", new { id = productID });
+                return RedirectToAction("Show", "Products", new { id = id });
             }
             catch (Exception ex)
             {
                 TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
-                return RedirectToAction("Show", "Products", new { id = productID });
+                return RedirectToAction("Show", "Products", new { id = id });
             }
         }
     }

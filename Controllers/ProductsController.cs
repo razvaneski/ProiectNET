@@ -94,6 +94,7 @@ namespace StoreProject.Controllers
             {
                 try
                 {
+                    db.Reviews.RemoveRange(db.Reviews.Where(r => r.ProductID == product.ProductID));
                     db.Remove(product);
                     db.SaveChanges();
                     TempData["Success"] = "Produs sters cu succes!";
@@ -102,7 +103,7 @@ namespace StoreProject.Controllers
                 catch (Exception ex)
                 {
                     TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
-                    return RedirectToAction("Show/{id}");
+                    return RedirectToAction("Show", new { id = id });
                 }
             }
             else

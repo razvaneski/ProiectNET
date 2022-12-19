@@ -212,12 +212,14 @@ namespace StoreProject.Migrations
                         name: "FK_Reviews_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Reviews_Products_ProductID",
                         column: x => x.ProductID,
                         principalTable: "Products",
-                        principalColumn: "ProductID");
+                        principalColumn: "ProductID",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
