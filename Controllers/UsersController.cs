@@ -40,6 +40,8 @@ namespace StoreProject.Controllers
             }
             if (User.IsInRole("Admin") || _userManager.GetUserId(User) == id)
             {
+                var roles = db.Roles.ToArray();
+                ViewBag.Roles = roles;
                 return View(user);
             }
             else
@@ -89,6 +91,7 @@ namespace StoreProject.Controllers
             }
             if (User.IsInRole("Admin") || _userManager.GetUserId(User) == id)
             {
+                var newRole = Request.Form["NewRole"]; // TODO: change roles
                 try
                 {
                     oldUser.Email = user.Email;
