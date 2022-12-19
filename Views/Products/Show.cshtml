@@ -36,7 +36,7 @@
 }
 else 
 {
-    <p>Rating produs: @Model.Rating</p>
+    <p>Rating produs: @Model.Rating / 5</p>
 }
 
 <br />
@@ -47,6 +47,12 @@ else
         <div>
             <p>@review.Title</p>
             <p>@review.Content</p>
+            @if(User.IsInRole("Admin") || UserManager.GetUserId(User) == review.UserID)
+            {
+                <form method="post" action="/Reviews/Delete/@review.ReviewID">
+                    <button tyoe="submit">Sterge review</button>
+                </form>
+            }
         </div>
         <br />
     }
