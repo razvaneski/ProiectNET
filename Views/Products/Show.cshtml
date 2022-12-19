@@ -47,6 +47,7 @@ else
         <div>
             <p>@review.Title</p>
             <p>@review.Content</p>
+            <p>Scor: @review.Rating</p>
             @if(User.IsInRole("Admin") || UserManager.GetUserId(User) == review.UserID)
             {
                 <form method="post" action="/Reviews/Delete/@review.ReviewID">

@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model StoreProject.Models.ApplicationUser
+@inject UserManager<ApplicationUser> UserManager
+
+<h3>@Model.Email</h3>
+
+<form method="post" action="/Users/Edit/@Model.Id">
+    <label>Email</label>
+    <input type="text" name="Email" value="@Model.Email"/>
+    <br />
+    
+    <label>Numar de telefon</label>
+    <input type="tel" name="PhoneNumber" value="@Model.PhoneNumber"/>
+    <br />
+
+    <button type="submit">Confirma datele</button>
+</form>
+<br />
+<form method="post" action="/Users/Delete/@Model.Id">
+    <button type="submit">Sterge contul</button>    
+</form>
