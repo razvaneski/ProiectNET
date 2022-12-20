@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model StoreProject.Models.ApplicationUser[]
+@inject UserManager<ApplicationUser> UserManager
+
+<h3>Utilizatori</h3>
+<br />
+
+@foreach(var user in Model)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@user.Email</h5>
+            <p class="card-text">@user.PhoneNumber</p>
+            <a href="/Users/Show/@user.Id" class="btn btn-primary">Editeaza</a>
+        </div>
+    </div>
+    <br />
+}
