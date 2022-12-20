@@ -45,7 +45,7 @@ namespace StoreProject.Controllers
 
             var paginatedProducts = products.Skip(offset).Take(_perPage);
 
-            ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+            ViewBag.LastPage = Math.Ceiling((float)totalItems / (float)_perPage);
 
             ViewBag.Products = paginatedProducts;
             return View();
