@@ -28,11 +28,9 @@ namespace StoreProject.Controllers
         }
         public IActionResult Index()
         {
-            int _perPage = 6;
+            int _perPage = 3;
 
             var products = db.Products.Include("Category");
-
-            ViewBag.Products = products;
 
             int totalItems = products.Count();
 
@@ -45,11 +43,11 @@ namespace StoreProject.Controllers
                 offset = (currentPage - 1) * _perPage;
             }
 
-            var paginatedArticles = products.Skip(offset).Take(_perPage);
+            var paginatedProducts = products.Skip(offset).Take(_perPage);
 
             ViewBag.lastPage = Math.Ceiling((float)totalItems / (float)_perPage);
 
-            ViewBag.Articles = paginatedArticles;
+            ViewBag.Products = paginatedProducts;
             return View();
 
         }

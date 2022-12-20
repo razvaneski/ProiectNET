@@ -32,7 +32,7 @@ namespace StoreProject.Controllers
 
         {
             
-            var bestProducts = db.Products.Include("Category").OrderBy(p => p.Price);
+            var bestProducts = db.Products.Include("Category");
 
             var img_src = "/images/" + bestProducts.First().Category.Name + ".jpg";
              
