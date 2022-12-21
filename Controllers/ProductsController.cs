@@ -28,9 +28,24 @@ namespace StoreProject.Controllers
         }
         public IActionResult Index()
         {
-            int _perPage = 3;
 
             var products = db.Products.Include("Category");
+
+            var search = "";
+            // MOTOR DE CAUTARE
+            if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
+            {
+                search = Convert.ToString(HttpContext.Request.Query["search"]).Trim();
+
+                // Cautare in articol (nume & descriere & categorie)
+                List<string> productIDs = db.Products.Where(prod => prod.Name.Contains(search) || prod.Category.Name.Contains(search) || prod.Description.Contains(search)).Select(p => p.ProductID).ToList();
+               
+                products = db.Products.Where(p => productIDs.Contains(p.ProductID)).Include("Category");
+            }
+            
+            ViewBag.SearchString = search;
+
+            int _perPage = 3;
 
             int totalItems = products.Count();
 
@@ -48,6 +63,16 @@ namespace StoreProject.Controllers
             ViewBag.LastPage = Math.Ceiling((float)totalItems / (float)_perPage);
 
             ViewBag.Products = paginatedProducts;
+
+            if (search != "")
+            {
+                ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&page";
+            }
+            else
+            {
+                ViewBag.PaginationBaseUrl = "/Products/Index/?page";
+            }
+
             return View();
 
         }

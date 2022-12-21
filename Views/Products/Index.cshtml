@@ -3,13 +3,19 @@
 @inject UserManager<ApplicationUser> UserManager
 
 
+<form method="GET" class="d-flex">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+    <input type="text" class="form-control" placeholder="Cauta produs" name="search" value="@ViewBag.SearchString">
+    
+</form>
+<br />
 <h3 class="text-lg-center">Produse</h3>
 <br />
 <div class="d-flex flex-wrap justify-content-center">
     @foreach (var product in ViewBag.Products)
     {
         <div class="card" style="width: 18rem; margin: 2px">
-            <img src="/images/question_mark.jpg" class="card-img-top" alt="coming_soon_img">
+            <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="coming_soon_img">
             <div class="card-body">
                 <h5 class="card-title">@product.Name</h5>
                 <p class="card-text">@product.Description</p>
@@ -22,24 +28,28 @@
     }
 </div>
 <br />
+
+@*AFISARE PAGINATA*@
+
+<br />
 <div class="d-flex justify-content-center">
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link"
-                   href="/Products/Index?page=1" aria-label="Previous">
+                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
+
             @for (int i = 1; i <= ViewBag.lastPage; i++)
             {
                 <li class="page-item">
-                    <a class="page-link"href="/Products/Index?page=@i">@(i)</a>
+                    <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@(i)</a>
                 </li>
             }
+
             <li class="page-item">
-                <a class="page-link"
-                   href="/Products/Index?page=@(ViewBag.lastPage)" aria-label="Next">
+                <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
                 </a>
             </li>

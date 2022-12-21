@@ -23,7 +23,7 @@
 <div class="row mb-4">
      @foreach (var product in ViewBag.Secondbest)
      {
-         <div class="col-6 row-style">
+        <div class="col-6 row-style">
              <div class="card">
                  <div class="card-title p-3 text-center bg-dark text-white">
                     <h4>@Html.Raw(product.Name)</h4>
@@ -33,9 +33,9 @@
                      <div class="font-montserrat mb-3 truncate">@Html.Raw(product.Description)</div>
                      <div class="font-montserrat mb-3 truncate">@Html.Raw(product.Price)</div>
                  </div>
-                     <div class="card-footer">
-                        <a class="btn btn-outline-success" href="/Products/Show/@product.ProductID">Vezi Articolul</a>
-                    </div>
+                 <div class="card-footer">
+                    <a class="btn btn-outline-success" href="/Products/Show/@product.ProductID">Vezi Articolul</a>
+                 </div>
              </div>
          </div>
      }
