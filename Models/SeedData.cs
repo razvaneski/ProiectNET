@@ -113,6 +113,22 @@ namespace StoreProject.Models
                             }
                         ) ;
                 }
+
+                if(!context.Products.Any())
+                {
+                    context.Products.AddRange
+                        (
+                            new Product
+                            {
+                                ProductID = "44dd5290-7b48-4fd5-bd98-497123a6c1234",
+                                Name = "Samsung Galaxy S10",
+                                Price = 1999,
+                                Description = "Samsung Galaxy S10 este un smartphone Android avansat si puternic, cu caracteristici multiple, un design inovator si o experienta de utilizare exceptionala.",
+                                CategoryID = "3ec2a986-f612-46c5-bdce-11c6d48fbf4f",
+                                UserID = "2c5e174e - 3b0e - 446f - 86af483d56fd7203"
+                            }
+                        );
+                }
                 context.SaveChanges();
             }
         }
