@@ -1,12 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@model StoreProject.Models.Product
-@inject UserManager<ApplicationUser> UserManager
-
-
-<form method="GET" class="d-flex">
+﻿<form method="GET" class="d-flex">
     <button class="btn btn-outline-success" type="submit">Search</button>
     <input type="text" class="form-control" placeholder="Cauta produs" name="search" value="@ViewBag.SearchString">
-    
+
 </form>
 <br />
 <h3 class="text-lg-center">Produse</h3>
@@ -14,18 +9,19 @@
 <div class="d-flex flex-wrap justify-content-center">
     @foreach (var product in ViewBag.Products)
     {
-        
+
         <div class="card" style="width: 18rem; margin: 2px">
             <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="coming_soon_img">
             <div class="card-body">
-                <h5 class="card-title titlu-lung">@product.Name</h5>
+                <h5 class="card-title">@product.Name</h5>
+                <p class="card-text">@product.Description</p>
                 <p>@product.Price</p>
-            
+
             </div>
-            <a href="/Products/Show/@product.ProductID" class="btn btn-primary" style="margin-bottom: 5px; margin-left: 5px; width: 8rem">Vezi produs</a>
+            <a href="/Requests/Show/@product.ProductID" class="btn btn-primary" style="margin-bottom: 5px; margin-left: 5px; width: 8rem">Vezi produs</a>
         </div>
         <br />
-               
+
     }
 </div>
 <br />
@@ -57,10 +53,3 @@
         </ul>
     </nav>
 </div>
-
-@if(User.IsInRole("Admin") || User.IsInRole("Colaborator"))
-{
-    <div class="d-flex flex-column justify-content-center">
-        <a class="btn btn-primary" href="/Products/Add" style="width: 10rem">Adauga produs</a>
-    </div>
-}

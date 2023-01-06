@@ -63,41 +63,48 @@
     
 }
    
+@if (User.IsInRole("User") || User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+{
 
-@if(Model.Rating == 0){
-    <div class="d-flex flex-column" style="width: 60%">
-        <h3>Fii primul care lasa o recenzie</h3>
-        <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
+    @if (Model.Rating == 0)
+    {
+        <div class="d-flex flex-column" style="width: 60%">
+            <h3>Fii primul care lasa o recenzie</h3>
+            <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
 
-            <div>
-                <label>Nota</label>
-                <input type="number" name="Rating" min="1" max="5" value="5" />
-            </div>
+                <div>
+                    <label>Nota</label>
+                    <input type="number" name="Rating" min="1" max="5" value="5" />
+                </div>
 
-            <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei"/>
+                <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
 
-            <textarea name="Content" placeholder="Text" rows="3"></textarea>
+                <textarea name="Content" placeholder="Text" rows="3"></textarea>
 
-            <button type="submit">Adauga recenzie</button>
-        </form>
-    </div>
-    
-}
-else{
-    <div class="d-flex flex-column" style="width: 60%">
-        <h3>Lasa o recenzie</h3>
-        <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
-            <div>
-                <label>Nota</label>
-                <input type="number" name="Rating" min="1" max="5" value="5" />
-            </div>
-            
+                <button type="submit">Adauga recenzie</button>
+            </form>
+        </div>
 
-            <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
+    }
+    else
+    {
+        <div class="d-flex flex-column" style="width: 60%">
+            <h3>Lasa o recenzie</h3>
+            <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
+                <div>
+                    <label>Nota</label>
+                    <input type="number" name="Rating" min="1" max="5" value="5" />
+                </div>
 
-            <textarea name="Content" placeholder="Text" rows="3"></textarea>
 
-            <button type="submit">Adauga recenzie</button>
-        </form>
-    </div>
+                <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
+
+                <textarea name="Content" placeholder="Text" rows="3"></textarea>
+
+                <button type="submit">Adauga recenzie</button>
+            </form>
+        </div>
+    }
+}else{
+    <h4>Pentru a lasa o recenzie trebuie sa va logati mai intai</h4>
 }

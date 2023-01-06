@@ -37,7 +37,7 @@ namespace StoreProject.Controllers
             var img_src = "/images/" + bestProducts.First().Category.Name + ".jpg";
              
             ViewBag.Best = bestProducts.First();
-            ViewBag.Secondbest = bestProducts.Skip(1).Take(2);
+            ViewBag.SecondThirdbest = bestProducts.Skip(1).Take(2);
             ViewBag.Path = img_src;
            
             

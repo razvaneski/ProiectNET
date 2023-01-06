@@ -10,13 +10,13 @@ using System.Text.RegularExpressions;
 
 namespace StoreProject.Controllers
 {
-    public class ProductsController : Controller
+    public class RequestsController : Controller
     {
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public ProductsController(
+        public RequestsController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager
@@ -26,10 +26,11 @@ namespace StoreProject.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-
-            var products = db.Products.Include("Category").Where(p=>p.Status!="in asteptare");
+            var products = db.Products.Include("Category").Where(p => p.Status == "in asteptare");
 
             var search = "";
             // MOTOR DE CAUTARE
@@ -40,9 +41,9 @@ namespace StoreProject.Controllers
                 // Cautare in articol (nume & descriere & categorie)
                 List<string> productIDs = db.Products.Where(prod => prod.Name.Contains(search) || prod.Category.Name.Contains(search) || prod.Description.Contains(search)).Select(p => p.ProductID).ToList();
 
-                products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.Status != "in asteptare").Include("Category");
+                products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.Status == "in asteptare").Include("Category");
             }
-            
+
             ViewBag.SearchString = search;
 
             int _perPage = 3;
@@ -74,10 +75,35 @@ namespace StoreProject.Controllers
             }
 
             return View();
-
         }
 
-        [Authorize(Roles = "Colaborator,Admin")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Show(string id)
+        {
+            var product = db.Products
+                .Include("User")
+                .Include("Category")
+                .FirstOrDefault(prod => prod.ProductID == id);
+
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            ApplicationUser user = db.Users.FirstOrDefault(u => u.Id == product.UserID);
+
+            if (user == null) 
+            { 
+                return NotFound(); 
+            }
+
+            ViewBag.Email = user.Email;
+
+            return View(product);
+        }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Add()
         {
             var categories = db.Categories;
@@ -85,21 +111,17 @@ namespace StoreProject.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Colaborator,Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Add(Product product)
+        public IActionResult Add(string id)
         {
-            if (User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+            Product product = db.Products.Find(id);
+
+            if (User.IsInRole("Admin"))
             {
                 try
                 {
-                    product.ProductID = Guid.NewGuid().ToString();
-                    product.UserID = _userManager.GetUserId(User);
-                    if (User.IsInRole("Colaborator"))
-                    {
-                        product.Status = "in asteptare";
-                    }
-                    db.Products.Add(product);
+                    product.Status = "acceptat";
                     db.SaveChanges();
                     TempData["Success"] = "Produs adaugat cu succes!";
                     return RedirectToAction("Index");
@@ -116,22 +138,7 @@ namespace StoreProject.Controllers
             }
         }
 
-        public IActionResult Show(string id)
-        {
-            var product = db.Products
-                .Include("User")
-                .Include("Category")
-                .Include("Reviews")
-                .FirstOrDefault(prod => prod.ProductID == id);
- 
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
-        [Authorize(Roles = "Colaborator,Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Delete(string id)
         {
@@ -141,7 +148,7 @@ namespace StoreProject.Controllers
                 return NotFound();
             }
 
-            if(User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == product.UserID))
+            if (User.IsInRole("Admin"))
             {
                 try
                 {
@@ -155,56 +162,6 @@ namespace StoreProject.Controllers
                 {
                     TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
                     return RedirectToAction("Show", new { id = id });
-                }
-            }
-            else
-            {
-                return Unauthorized();
-            }
-        }
-
-        [Authorize(Roles = "Colaborator,Admin")]
-        public IActionResult Edit(string id)
-        {
-            var categories = db.Categories;
-            ViewBag.Categories = categories;
-
-            Product product = db.Products.Include("Category").First(prod => prod.ProductID == id);
-            if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == product.UserID))
-            {
-                if (product == null)
-                {
-                    return NotFound();
-                }
-                return View(product);
-            }
-            else
-            {
-                return Unauthorized();
-            }
-        }
-
-        [Authorize(Roles = "Colaborator,Admin")]
-        [HttpPost]
-        public IActionResult Edit(string id, Product newProduct)
-        {
-            Product oldProduct = db.Products.Find(id);
-            if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == oldProduct.UserID))
-            {
-                try
-                {
-                    oldProduct.Name = newProduct.Name;
-                    oldProduct.Price = newProduct.Price;
-                    oldProduct.Description = newProduct.Description;
-                    oldProduct.CategoryID = newProduct.CategoryID;
-                    db.SaveChanges();
-                    TempData["Success"] = "Produs modificat cu succes!";
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
-                    return RedirectToAction("Edit/{product.ProductID}");
                 }
             }
             else

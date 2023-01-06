@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model StoreProject.Models.Product
+@inject UserManager<ApplicationUser> UserManager
+
+<div class="d-flex flex-column justify-content-md-start border border-1" style="padding:3px">
+
+    <h3 style="margin-bottom:50px;margin-top:10px; background: #95B6DB; padding: 25px">@Model.Name</h3>
+
+    <dl class="row">
+        <dt class="col-sm-3">Trimis de catre</dt>
+        <dd class="col-sm-9">@ViewBag.Email</dd>
+
+        <dt class="col-sm-3">Descriere</dt>
+        <dd class="col-sm-9">@Model.Description</dd>
+
+        <dt class="col-sm-3">Pret</dt>
+        <dd class="col-sm-9">@Model.Price</dd>
+
+        <dt class="col-sm-3">Categorie</dt>
+        <dd class="col-sm-9">@Model.Category.Name</dd>
+    </dl>
+
+    <div class="d-flex flex-row" style="gap: 2px">
+        <div class="d-flex flex-row" style="gap: 2px">
+            <form method="post" action="/Requests/Delete/@Model.ProductID">
+                <button class="btn btn-danger" type="submit">Sterge</button>
+            </form>
+            <form method="post" action="/Requests/Add/@Model.ProductID">
+                <button class="btn btn-primary" type="submit">Adauga</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+

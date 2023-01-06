@@ -50,5 +50,7 @@ namespace StoreProject.Models
             }
         }
 
+        public string? Status { get; set; }
+
     }
 }
