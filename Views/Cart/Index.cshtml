@@ -6,11 +6,12 @@
 
 @if (Model == null || Model.Count == 0)
 {
-        <h4 class="text-lg-center">Cosul tau este gol</h4>
+    <h4 class="text-lg-center">Cosul tau este gol</h4>
 }
 else
 {
-        <table class="table table-striped" style="margin-top:50px; margin-bottom:50px">
+    var areAllProductsAvailable = true;
+    <table class="table table-striped" style="margin-top:50px; margin-bottom:50px">
             <thead>
                 <tr>
                     <th scope="col">Nume</th>
@@ -23,23 +24,69 @@ else
             <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td style="display:flex; justify-content:space-evenly">
-                        <a href="/Cart/DecreaseQuantity/@item.ProductID" style="text-decoration:none"><i class="bi bi-dash-circle"></i></a>
-                        @item.Quantity
-                        <a href="/Cart/IncreaseQuantity/@item.ProductID" style="text-decoration:none"><i class="bi bi-plus-circle"></i></a>
-                    </td>
-                    <td>@item.Product.Price</td>
-                    <td>@(item.Product.Price * item.Quantity)</td>
-                    <td>
-                        <a href="/Cart/Remove/@item.ProductID" style="text-decoration:none"><i class="bi bi-trash"></i></a>
-                    </td>
-                </tr>
+                @if(item.Quantity <= item.Product.Stock)
+                {
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td style="display=flex;justify-items=stretch;">
+                            <a href="/Cart/DecreaseQuantity/@item.ProductID" style="text-decoration:none"><i class="bi bi-dash-circle"></i></a>
+                             @item.Quantity 
+                            <a href="/Cart/IncreaseQuantity/@item.ProductID" style="text-decoration:none"><i class="bi bi-plus-circle"></i></a>
+                        </td>
+                        <td>@item.Product.Price</td>
+                        <td>@(item.Product.Price * item.Quantity)</td>
+                        <td>
+                            <a href="/Cart/Remove/@item.ProductID" style="text-decoration:none"><i class="bi bi-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    areAllProductsAvailable = false;
+                }
             }
             </tbody>
         </table>
-        <div class="text-lg-center">
-            <a href="/Orders/Checkout" class="btn btn-success">Finalizeaza comanda</a>
-        </div>
+        @if(areAllProductsAvailable)
+        {
+            <div class="text-lg-center">
+                <a href="/Orders/Checkout" class="btn btn-success">Finalizeaza comanda</a>
+            </div>
+        }
+        else
+        {
+            <h4>Produse indisponibile</h4>
+            <p>Unul sau mai multe produse sunt indisponibile. Trebuie sa le elimini inainte de a finaliza comanda</p>
+        <table class="table table-striped" style="margin-top:50px; margin-bottom:50px">
+            <thead>
+                <tr>
+                    <th scope="col">Nume</th>
+                    <th scope="col">Cantitate</th>
+                    <th scope="col">Pret</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    @if (item.Quantity > item.Product.Stock)
+                    {
+                        <tr>
+                            <td>@item.Product.Name</td>
+                            <td>
+                                @item.Quantity
+                            </td>
+                            <td>@item.Product.Price</td>
+                            <td>@(item.Product.Price * item.Quantity)</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        areAllProductsAvailable = false;
+                    }
+                }
+            </tbody>
+        </table>
+        <a class="btn btn-danger" href="/Cart/RemoveUnavailableProducts">Elimina produsele</a>
+        }
 }

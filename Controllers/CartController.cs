@@ -169,7 +169,7 @@ namespace StoreProject.Controllers
             {
                 if(cart.CartItems != null)
                 {
-                    var cartItems = cart.CartItems.Where(ci => ci.Product.Stock < ci.Quantity);
+                    var cartItems = db.CartItems.Include("Product").Where(ci => ci.Product.Stock < ci.Quantity);
                     if(cartItems != null)
                     {
                         db.CartItems.RemoveRange(cartItems);

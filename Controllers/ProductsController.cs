@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using NuGet.Versioning;
 using StoreProject.Data;
 using StoreProject.Models;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace StoreProject.Controllers
 {
@@ -192,7 +194,7 @@ namespace StoreProject.Controllers
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
-        public IActionResult Edit(string id, Product newProduct)
+        public IActionResult Edit(string id, Product newProduct, [FromForm] IFormFile imageFile)
         {
             Product oldProduct = db.Products.Find(id);
             if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == oldProduct.UserID))
@@ -262,6 +264,32 @@ namespace StoreProject.Controllers
                 TempData["Success"] = "Produs adaugat in cos.";
             }
             return RedirectToAction("Show", new { id = id });
+        }
+
+        [Authorize(Roles = "Colaborator,Admin")]
+        [HttpPost]
+        public IActionResult ChangeImage(string productID, IFormFile image)
+        {
+            var product = db.Products.FirstOrDefault(p => productID == p.ProductID);
+            if (product != null)
+            {
+                if (image != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        image.CopyTo(memoryStream);
+                        product.Image = memoryStream.ToArray();
+                        db.SaveChanges();
+                    }
+                    TempData["Success"] = "Imagine incarcata.";
+                }
+                else
+                {
+                    TempData["Error"] = "Imaginea nu a putut fi incarcata.";
+                }
+                return RedirectToAction("Edit", new { id = productID });
+            }
+            return NotFound();
         }
     }
 }

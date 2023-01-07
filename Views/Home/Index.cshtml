@@ -8,7 +8,16 @@
                      <div class="font-montserrat mb-3 truncate">@Html.Raw(ViewBag.Best.Price)</div>
                  </div>
                  <div class="col-md-4">
-                    <a href="/Products/Show/@ViewBag.Best.ProductID"><img src=@ViewBag.Path class="img-fluid align-items-center justify-content-center front_img img-link" style="border-radius: 5px" /></a>
+                    <a href="/Products/Show/@ViewBag.Best.ProductID">
+                        @if (ViewBag.Best.Image != null)
+                        {
+                            <img src="data:image;base64,@System.Convert.ToBase64String(ViewBag.Best.Image)" class="img-fluid align-items-center justify-content-center front_img img-link" style="border-radius: 5px">
+                             }
+                        else
+                        {
+                            <img src=@ViewBag.Path class="img-fluid align-items-center justify-content-center front_img img-link" style="border-radius: 5px" />
+                        }
+                    </a>
                  </div>
              </div>
          </div>

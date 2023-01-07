@@ -11,7 +11,14 @@
     {
 
         <div class="card" style="width: 18rem; margin: 2px; padding:3px">
-            <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="coming_soon_img">
+            @if (product.Image != null)
+            {
+                <img src="data:image;base64,@System.Convert.ToBase64String(product.Image)" class="card-img-top" alt="coming_soon_img">
+            }
+            else
+            {
+                <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="coming_soon_img">
+            }
             <div class="card-body">
                 <h5 class="card-title">@product.Name</h5>
                 <p class="card-text">@product.Description</p>

@@ -35,3 +35,18 @@
 
     <button class="btn btn-success" style="width:fit-content;margin-top: 50px;padding:5px" type="submit">Salveaza schimbarile</button>
 </form>
+
+<form method="post" enctype="multipart/form-data" asp-controller="Products" asp-action="ChangeImage">
+    <div class="form-group">
+        <div class="col-md-10">
+            <p>Ataseaza imagine</p>
+            <input type="file" name="image" />
+            <input type="text" hidden name="productID" value="@Model.ProductID" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="submit" value="Trimite" />
+        </div>
+    </div>
+</form>

@@ -4,7 +4,14 @@
 
 <div class="d-flex flex-row">
     <div>
-        <img src=@("/images/"+Model.Category.Name+".jpg") class="img-fluid rounded-start" alt="coming_soon_img" style="height:100%">
+        @if(Model.Image != null)
+        {
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)"  class="img-fluid rounded-start" alt="coming_soon_img" style="height:100%" />
+        }
+        else
+        {
+            <img src=@("/images/"+Model.Category.Name+".jpg") class="img-fluid rounded-start" alt="coming_soon_img" style="height:100%">
+        }
     </div>
     <div class="d-flex flex-column justify-content-around border border-1" style="width:170%">
 

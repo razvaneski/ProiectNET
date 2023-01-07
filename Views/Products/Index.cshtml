@@ -16,7 +16,16 @@
     {
 
         <div class="card" style="width: 18rem; margin: 2px; padding:3px">
-            <a href="/Products/Show/@product.ProductID"> <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top img-link" alt="coming_soon_img" style="border-radius: 5px"></a>
+            <a href="/Products/Show/@product.ProductID"> 
+                @if (product.Image != null)
+                {
+                    <img src="data:image;base64,@System.Convert.ToBase64String(product.Image)" class="card-img-top img-link" alt="coming_soon_img" style="border-radius: 5px">
+                }
+                else
+                {
+                     <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top img-link" alt="coming_soon_img" style="border-radius: 5px">
+                }
+            </a>           
 
             <div class="card-body">
 

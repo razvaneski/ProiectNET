@@ -30,7 +30,7 @@ namespace StoreProject.Models
         public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<Review>? Reviews { get; set; }
-
+        public byte[]? Image { get; set; }
         [NotMapped]
         public double Rating
         {
