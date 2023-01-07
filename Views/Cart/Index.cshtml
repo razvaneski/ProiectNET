@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<StoreProject.Models.CartItem>
+@inject UserManager<ApplicationUser> UserManager
+
+<h3 class="text-lg-center">Cos de cumparaturi</h3>
+
+@if (Model == null || Model.Count == 0)
+{
+        <h4 class="text-lg-center">Cosul tau este gol</h4>
+}
+else
+{
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nume</th>
+                    <th scope="col">Cantitate</th>
+                    <th scope="col">Pret</th>
+                    <th scope="col">Total</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                        <tr>
+                            <td>@item.Product.Name</td>
+                            <td>
+                                <a href="/Cart/DecreaseQuantity/@item.ProductID">-</a>
+                                @item.Quantity
+                                <a href="/Cart/IncreaseQuantity/@item.ProductID">+</a>
+                            </td>
+                            <td>@item.Product.Price</td>
+                            <td>@(item.Product.Price * item.Quantity)</td>
+                            <td><a href="/Cart/Remove/@item.ProductID">Sterge</a></td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+        <div class="text-lg-center">
+            <a href="/Orders/Create" class="btn btn-success">Finalizeaza comanda</a>
+        </div>
+}
