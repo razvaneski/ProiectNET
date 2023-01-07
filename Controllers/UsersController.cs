@@ -31,7 +31,7 @@ namespace StoreProject.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Show(string id)
+        public async Task<IActionResult> Show(string id)
         {
             ApplicationUser user = db.Users.FirstOrDefault(u => u.Id == id);
             if (user == null)
@@ -42,6 +42,7 @@ namespace StoreProject.Controllers
             {
                 var roles = db.Roles.ToArray();
                 ViewBag.Roles = roles;
+                ViewBag.UserRoles = await _userManager.GetRolesAsync(user);
                 return View(user);
             }
             else
@@ -91,7 +92,6 @@ namespace StoreProject.Controllers
             }
             if (User.IsInRole("Admin") || _userManager.GetUserId(User) == id)
             {
-                var newRole = Request.Form["NewRole"]; // TODO: change roles
                 try
                 {
                     oldUser.Email = user.Email;
@@ -105,6 +105,37 @@ namespace StoreProject.Controllers
                 {
                     TempData["Error"] = "A aparut o eroare, te rugam sa reincerci.";
                     return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(string id, string role)
+        {
+            ApplicationUser user = db.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if (User.IsInRole("Admin"))
+            {
+                try
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    await _userManager.RemoveFromRolesAsync(user, userRoles);
+                    await _userManager.AddToRoleAsync(user, role);
+                    TempData["Success"] = "Rol adaugat cu succes!";
+                    return RedirectToAction("Show", new { id = id });
+                }
+                catch
+                {
+                    TempData["Error"] = "A aparut o eroare, te rugam sa reincerci.";
+                    return RedirectToAction("Show", new { id = id });
                 }
             }
             else

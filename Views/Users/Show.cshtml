@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using System.Linq
 @model StoreProject.Models.ApplicationUser
 @inject UserManager<ApplicationUser> UserManager
 
@@ -12,25 +13,33 @@
     <label>Numar de telefon</label>
     <input type="tel" name="PhoneNumber" value="@Model.PhoneNumber"/>
     <br />
-
-    <select name="NewRole">
-        @foreach (var role in ViewBag.Roles)
-        {
-            @if (User.IsInRole(role.Name)) // TODO: why is this always true?
-            {
-                <option value="@role.Name" selected="selected">@role.Name</option>
-            }
-            else
-            {
-                <option value="@role.Name">@role.Name</option>
-            }
-        }
-    </select>
     <br />
 
     <button type="submit">Confirma datele</button>
 </form>
 <br />
+@if(User.IsInRole("Admin"))
+{
+    <form method="post" action="/Users/ChangeRole">
+        <label>Adauga rol</label>
+        <select name="role">
+            @foreach (var role in ViewBag.Roles)
+            {
+                @if(role.Name == ViewBag.UserRoles[0])
+                {
+                    <option value="@role.Name" selected>@role.Name</option>
+                }
+                else
+                {
+                    <option value="@role.Name">@role.Name</option>
+                }
+            }
+        </select>
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit">Adauga rol</button>
+    </form>
+    <br />
+}
 <form method="post" action="/Users/Delete/@Model.Id">
     <button type="submit">Sterge contul</button>    
 </form>
