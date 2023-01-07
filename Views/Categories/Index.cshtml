@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<StoreProject.Models.Category>
+@inject UserManager<ApplicationUser> UserManager
+
+<h3>Categorii</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Nume</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a href="/Categories/Remove/@item.CategoryID" style="text-decoration:none"><i class="bi bi-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<a href="/Categories/New" class="btn-primary">Adauga categorie</a>

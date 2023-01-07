@@ -13,11 +13,11 @@
         <div class="card" style="width: 18rem; margin: 2px; padding:3px">
             @if (product.Image != null)
             {
-                <img src="data:image;base64,@System.Convert.ToBase64String(product.Image)" class="card-img-top" alt="coming_soon_img">
+                <img src="data:image;base64,@System.Convert.ToBase64String(product.Image)" class="card-img-top" alt="/images/coming_soon_img.jpg">
             }
             else
             {
-                <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="coming_soon_img">
+                <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="/images/coming_soon_img.jpg">
             }
             <div class="card-body">
                 <h5 class="card-title">@product.Name</h5>

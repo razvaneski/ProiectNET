@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<StoreProject.Models.CartItem>
+@inject UserManager<ApplicationUser> UserManager
+
+<h3>Adauga categorie</h3>
+
+<form method="post" action="/Categories/New">
+    <label>Nume categorie</label>
+    <input type="text" name="Name"/>
+    
+    <button type="submit">Adauga</button>
+</form>
