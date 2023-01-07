@@ -28,23 +28,35 @@
 
             <dt class="col-sm-3">Categorie</dt>
             <dd class="col-sm-9">@Model.Category.Name</dd>
+
+            <dt class="col-sm-3">In stoc</dt>
+            <dd class="col-sm-9">
+                @if(Model.Stock > 0)
+                {
+                    <span><span style="color:green;">Da </span>(@Model.Stock buc)</span>
+                }
+                else
+                {
+                    <span style="color:red;">Nu</span>
+                }
+            </dd>
         </dl>
         <div class="d-flex flex-row justify-content-sm-end" style="padding:10px; gap:2px">
-            @if(User.IsInRole("User")){
+            @if (User.IsInRole("User") || User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+            {
                 <form method="post" action="/Products/AddToCart/@Model.ProductID">
                     <button class="btn btn-primary" type="submit">Adauga in cos</button>
                 </form>
             }
             @if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && UserManager.GetUserId(User) == Model.UserID))
             {
-               
+
                 <form method="post" action="/Products/Delete/@Model.ProductID">
                     <button class="btn btn-danger" type="submit">Sterge produs</button>
                 </form>
                 <a class="btn btn-primary" href="/Products/Edit/@Model.ProductID"><i class="bi bi-pencil-square"></i>Editeaza</a>
 
             }
-
         </div>
     </div>
 </div>
