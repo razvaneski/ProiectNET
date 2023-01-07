@@ -29,7 +29,7 @@ namespace StoreProject.Controllers
         public IActionResult Index()
         {
 
-            var products = db.Products.Include("Category").Where(p=>p.Status!="in asteptare");
+            var products = db.Products.Include("Category").Where(p => p.IsAvailable == true);
 
             var search = "";
             // MOTOR DE CAUTARE
@@ -40,7 +40,7 @@ namespace StoreProject.Controllers
                 // Cautare in articol (nume & descriere & categorie)
                 List<string> productIDs = db.Products.Where(prod => prod.Name.Contains(search) || prod.Category.Name.Contains(search) || prod.Description.Contains(search)).Select(p => p.ProductID).ToList();
 
-                products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.Status != "in asteptare").Include("Category");
+                products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.IsAvailable == true).Include("Category");
             }
             
             ViewBag.SearchString = search;
@@ -95,10 +95,7 @@ namespace StoreProject.Controllers
                 {
                     product.ProductID = Guid.NewGuid().ToString();
                     product.UserID = _userManager.GetUserId(User);
-                    if (User.IsInRole("Colaborator"))
-                    {
-                        product.Status = "in asteptare";
-                    }
+                    product.IsAvailable = User.IsInRole("Admin");
                     db.Products.Add(product);
                     db.SaveChanges();
                     TempData["Success"] = "Produs adaugat cu succes!";
@@ -128,7 +125,15 @@ namespace StoreProject.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+            if(product.IsAvailable)
+            {
+                return View(product);
+            }
+            else if(User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == product.UserID))
+            {
+                return View(product);
+            }
+            return Unauthorized();
         }
 
         [Authorize(Roles = "Colaborator,Admin")]
@@ -198,6 +203,7 @@ namespace StoreProject.Controllers
                     oldProduct.Price = newProduct.Price;
                     oldProduct.Description = newProduct.Description;
                     oldProduct.CategoryID = newProduct.CategoryID;
+                    oldProduct.Stock = newProduct.Stock;
                     db.SaveChanges();
                     TempData["Success"] = "Produs modificat cu succes!";
                     return RedirectToAction("Index");
@@ -223,6 +229,11 @@ namespace StoreProject.Controllers
             {
                 return NotFound();
             }
+            if(product.Stock <= 0 || product.IsAvailable == false)
+            {
+                TempData["Error"] = "Produs indisponibil";
+                return RedirectToAction("Index");
+            }
             var cart = db.Carts.FirstOrDefault(c => c.UserID == _userManager.GetUserId(User));
             if (cart == null)
             {
@@ -238,7 +249,6 @@ namespace StoreProject.Controllers
                 cartItem.Quantity += 1;
                 db.SaveChanges();
                 TempData["Success"] = "Produs adaugat in cos.";
-                return RedirectToAction("Show", new { id = id });
             }
             else
             {
@@ -250,8 +260,8 @@ namespace StoreProject.Controllers
                 db.CartItems.Add(cartItem);
                 db.SaveChanges();
                 TempData["Success"] = "Produs adaugat in cos.";
-                return RedirectToAction("Show", new { id = id });
             }
+            return RedirectToAction("Show", new { id = id });
         }
     }
 }

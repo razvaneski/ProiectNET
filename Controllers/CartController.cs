@@ -80,9 +80,17 @@ namespace StoreProject.Controllers
                 var cartItem = db.CartItems.FirstOrDefault(ci => ci.ProductID == id && ci.CartID == cart.CartID);
                 if (cartItem != null)
                 {
-                    cartItem.Quantity += 1;
-                    db.SaveChanges();
-                    TempData["Success"] = "Produs adaugat cu succes.";
+                    var product = db.Products.FirstOrDefault(p => p.ProductID == cartItem.ProductID);
+                    if(product != null && product.Stock > cartItem.Quantity)
+                    {
+                        cartItem.Quantity += 1;
+                        db.SaveChanges();
+                        TempData["Success"] = "Produs adaugat cu succes.";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Stoc insuficient!";
+                    }
                 }
                 else
                 {
@@ -149,6 +157,26 @@ namespace StoreProject.Controllers
             else
             {
                 TempData["Error"] = "Eroare!";
+            }
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "User,Colaborator,Admin")]
+        public IActionResult RemoveUnavailableProducts()
+        {
+            var cart = db.Carts.Include("CartItems").FirstOrDefault(c => c.UserID == _userManager.GetUserId(User));
+            if(cart != null)
+            {
+                if(cart.CartItems != null)
+                {
+                    var cartItems = cart.CartItems.Where(ci => ci.Product.Stock < ci.Quantity);
+                    if(cartItems != null)
+                    {
+                        db.CartItems.RemoveRange(cartItems);
+                        db.SaveChanges();
+                        TempData["Success"] = "Produse eliminate cu succes.";
+                    }
+                }
             }
             return RedirectToAction("Index");
         }

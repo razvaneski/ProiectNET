@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreProject.Data;
 
@@ -11,9 +12,10 @@ using StoreProject.Data;
 namespace StoreProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230107140751_orderdate")]
+    partial class orderdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,40 +161,6 @@ namespace StoreProject.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("StoreProject.Models.Address", b =>
-                {
-                    b.Property<string>("AddressID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("County")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Street")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ZipCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AddressID");
-
-                    b.ToTable("Addresses", (string)null);
-                });
-
             modelBuilder.Entity("StoreProject.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -271,7 +239,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("StoreProject.Models.CartItem", b =>
@@ -295,7 +263,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Category", b =>
@@ -309,7 +277,7 @@ namespace StoreProject.Migrations
 
                     b.HasKey("CategoryID");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Order", b =>
@@ -317,9 +285,9 @@ namespace StoreProject.Migrations
                     b.Property<string>("OrderID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AddressID")
+                    b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -330,11 +298,9 @@ namespace StoreProject.Migrations
 
                     b.HasKey("OrderID");
 
-                    b.HasIndex("AddressID");
-
                     b.HasIndex("UserID");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("StoreProject.Models.OrderItem", b =>
@@ -360,7 +326,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("OrderID");
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Product", b =>
@@ -399,7 +365,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Review", b =>
@@ -430,7 +396,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -514,19 +480,11 @@ namespace StoreProject.Migrations
 
             modelBuilder.Entity("StoreProject.Models.Order", b =>
                 {
-                    b.HasOne("StoreProject.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("StoreProject.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Address");
 
                     b.Navigation("User");
                 });

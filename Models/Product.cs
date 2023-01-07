@@ -50,7 +50,7 @@ namespace StoreProject.Models
             }
         }
 
-        public string? Status { get; set; }
-
+        public bool IsAvailable { get; set; }
+        public int Stock { get; set; }
     }
 }

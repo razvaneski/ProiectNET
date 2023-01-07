@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<StoreProject.Models.Order>
+@inject UserManager<ApplicationUser> UserManager
+
+<h3>Comenzile tale</h3>
+
+@if (Model != null && Model.Count != 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Data</th>
+                <th scope="col">Adresa</th>
+                <th scope="col">Pret</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.OrderDate</td>
+                    <td>@item.Address.Street</td>
+                    <td>@item.TotalPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4>Nu ai nicio comanda</h4>
+}

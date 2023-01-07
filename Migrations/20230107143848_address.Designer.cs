@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StoreProject.Data;
 
@@ -11,9 +12,10 @@ using StoreProject.Data;
 namespace StoreProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230107143848_address")]
+    partial class address
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -190,7 +192,7 @@ namespace StoreProject.Migrations
 
                     b.HasKey("AddressID");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("StoreProject.Models.ApplicationUser", b =>
@@ -271,7 +273,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Carts", (string)null);
+                    b.ToTable("Carts");
                 });
 
             modelBuilder.Entity("StoreProject.Models.CartItem", b =>
@@ -295,7 +297,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Category", b =>
@@ -309,7 +311,7 @@ namespace StoreProject.Migrations
 
                     b.HasKey("CategoryID");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Order", b =>
@@ -334,7 +336,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("StoreProject.Models.OrderItem", b =>
@@ -360,7 +362,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("OrderID");
 
-                    b.ToTable("OrderItem", (string)null);
+                    b.ToTable("OrderItem");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Product", b =>
@@ -399,7 +401,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("StoreProject.Models.Review", b =>
@@ -430,7 +432,7 @@ namespace StoreProject.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

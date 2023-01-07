@@ -32,7 +32,7 @@ namespace StoreProject.Controllers
 
         {
             
-            var bestProducts = db.Products.Include("Category");
+            var bestProducts = db.Products.Include("Category").Where(p => p.IsAvailable == true);
 
             var img_src = "/images/" + bestProducts.First().Category.Name + ".jpg";
              

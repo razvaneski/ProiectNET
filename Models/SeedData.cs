@@ -125,7 +125,9 @@ namespace StoreProject.Models
                                 Price = 1999,
                                 Description = "Samsung Galaxy S10 este un smartphone Android avansat si puternic, cu caracteristici multiple, un design inovator si o experienta de utilizare exceptionala.",
                                 CategoryID = "3ec2a986-f612-46c5-bdce-11c6d48fbf4f",
-                                UserID = "2c5e174e - 3b0e - 446f - 86af483d56fd7203"
+                                UserID = "2c5e174e - 3b0e - 446f - 86af483d56fd7203",
+                                IsAvailable = true,
+                                Stock = 4
                             }
                         );
                 }
