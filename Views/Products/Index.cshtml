@@ -14,15 +14,17 @@
 <div class="d-flex flex-wrap justify-content-center">
     @foreach (var product in ViewBag.Products)
     {
-        
-        <div class="card" style="width: 18rem; margin: 2px">
-            <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="coming_soon_img">
+
+        <div class="card" style="width: 18rem; margin: 2px; padding:3px">
+            <a href="/Products/Show/@product.ProductID"> <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top img-link" alt="coming_soon_img" style="border-radius: 5px"></a>
+
             <div class="card-body">
+
                 <h5 class="card-title titlu-lung">@product.Name</h5>
                 <p>@product.Price</p>
             
             </div>
-            <a href="/Products/Show/@product.ProductID" class="btn btn-primary" style="margin-bottom: 5px; margin-left: 5px; width: 8rem">Vezi produs</a>
+           
         </div>
         <br />
                

@@ -4,13 +4,13 @@
 
 </form>
 <br />
-<h3 class="text-lg-center">Produse</h3>
+<h3 class="text-lg-center">Cereri</h3>
 <br />
 <div class="d-flex flex-wrap justify-content-center">
     @foreach (var product in ViewBag.Products)
     {
 
-        <div class="card" style="width: 18rem; margin: 2px">
+        <div class="card" style="width: 18rem; margin: 2px; padding:3px">
             <img src=@("/images/"+product.Category.Name+".jpg") class="card-img-top" alt="coming_soon_img">
             <div class="card-body">
                 <h5 class="card-title">@product.Name</h5>

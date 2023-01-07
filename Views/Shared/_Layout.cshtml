@@ -14,13 +14,22 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-light" style="margin-bottom: 20px">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">StoreProject</a>
+                <a class="navbar-brand font-logo" asp-area="" asp-controller="Home" asp-action="Index">StoreProject</a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Produse</a>
                         </li>
+                        <li class="nav-item">
+                            @if (User.IsInRole("User"))
+                            {
+                                <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
+                                    <i class="bi bi-cart"></i>
+                                </a>
+                            }
+                        </li>
+
                         @if(User.IsInRole("Admin")){
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

@@ -10,7 +10,7 @@
 }
 else
 {
-        <table class="table table-striped">
+        <table class="table table-striped" style="margin-top:50px; margin-bottom:50px">
             <thead>
                 <tr>
                     <th scope="col">Nume</th>
@@ -23,17 +23,19 @@ else
             <tbody>
             @foreach (var item in Model)
             {
-                        <tr>
-                            <td>@item.Product.Name</td>
-                            <td>
-                                <a href="/Cart/DecreaseQuantity/@item.ProductID">-</a>
-                                @item.Quantity
-                                <a href="/Cart/IncreaseQuantity/@item.ProductID">+</a>
-                            </td>
-                            <td>@item.Product.Price</td>
-                            <td>@(item.Product.Price * item.Quantity)</td>
-                            <td><a href="/Cart/Remove/@item.ProductID">Sterge</a></td>
-                        </tr>
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td style="display:flex; justify-content:space-evenly">
+                        <a href="/Cart/DecreaseQuantity/@item.ProductID" style="text-decoration:none"><i class="bi bi-dash-circle"></i></a>
+                        @item.Quantity
+                        <a href="/Cart/IncreaseQuantity/@item.ProductID" style="text-decoration:none"><i class="bi bi-plus-circle"></i></a>
+                    </td>
+                    <td>@item.Product.Price</td>
+                    <td>@(item.Product.Price * item.Quantity)</td>
+                    <td>
+                        <a href="/Cart/Remove/@item.ProductID" style="text-decoration:none"><i class="bi bi-trash"></i></a>
+                    </td>
+                </tr>
             }
             </tbody>
         </table>

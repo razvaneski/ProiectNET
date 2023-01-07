@@ -2,34 +2,35 @@
 @model StoreProject.Models.Product
 @inject UserManager<ApplicationUser> UserManager
 
-<div class="d-flex flex-column justify-content-md-start border border-1" style="padding:3px">
+<div class="d-flex flex-row">
+    <div>
+        <img src=@("/images/"+Model.Category.Name+".jpg") class="img-fluid rounded-start" alt="coming_soon_img" style="height:100%">
+    </div>
+    <div class="d-flex flex-column justify-content-around border border-1" style="width:170%">
 
-    <h3 style="margin-bottom:50px;margin-top:10px; background: #95B6DB; padding: 25px">@Model.Name</h3>
+        <h3 style="padding:10px">@Model.Name</h3>
 
-    <dl class="row">
-        <dt class="col-sm-3">Trimis de catre</dt>
-        <dd class="col-sm-9">@ViewBag.Email</dd>
+        <dl class="row" style="padding:10px">
 
-        <dt class="col-sm-3">Descriere</dt>
-        <dd class="col-sm-9">@Model.Description</dd>
+            <dt class="col-sm-3">Trimis de catre</dt>
+            <dd class="col-sm-9">@ViewBag.Email</dd>
 
-        <dt class="col-sm-3">Pret</dt>
-        <dd class="col-sm-9">@Model.Price</dd>
+            <dt class="col-sm-3">Descriere</dt>
+            <dd class="col-sm-9">@Model.Description</dd>
 
-        <dt class="col-sm-3">Categorie</dt>
-        <dd class="col-sm-9">@Model.Category.Name</dd>
-    </dl>
+            <dt class="col-sm-3">Pret</dt>
+            <dd class="col-sm-9">@Model.Price</dd>
 
-    <div class="d-flex flex-row" style="gap: 2px">
-        <div class="d-flex flex-row" style="gap: 2px">
+            <dt class="col-sm-3">Categorie</dt>
+            <dd class="col-sm-9">@Model.Category.Name</dd>
+        </dl>
+        <div class ="d-flex flex-row justify-content-sm-end" style="padding:10px; gap:2px">
             <form method="post" action="/Requests/Delete/@Model.ProductID">
-                <button class="btn btn-danger" type="submit">Sterge</button>
+                <button class="btn btn-danger" type="submit"><i class="bi bi-x-lg"></i>Respinge</button>
             </form>
             <form method="post" action="/Requests/Add/@Model.ProductID">
-                <button class="btn btn-primary" type="submit">Adauga</button>
+                <button class="btn btn-primary" type="submit"><i class="bi bi-check-lg"></i>Accepta</button>
             </form>
         </div>
     </div>
-
 </div>
-
