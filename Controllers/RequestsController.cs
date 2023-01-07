@@ -30,7 +30,7 @@ namespace StoreProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
-            var products = db.Products.Include("Category").Where(p => p.Status == "in asteptare");
+            var products = db.Products.Include("Category").Where(p => p.IsAvailable == false);
 
             var search = "";
             // MOTOR DE CAUTARE
@@ -41,7 +41,7 @@ namespace StoreProject.Controllers
                 // Cautare in articol (nume & descriere & categorie)
                 List<string> productIDs = db.Products.Where(prod => prod.Name.Contains(search) || prod.Category.Name.Contains(search) || prod.Description.Contains(search)).Select(p => p.ProductID).ToList();
 
-                products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.Status == "in asteptare").Include("Category");
+                products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.IsAvailable == false).Include("Category");
             }
 
             ViewBag.SearchString = search;
@@ -121,7 +121,7 @@ namespace StoreProject.Controllers
             {
                 try
                 {
-                    product.Status = "acceptat";
+                    product.IsAvailable = true;
                     db.SaveChanges();
                     TempData["Success"] = "Produs adaugat cu succes!";
                     return RedirectToAction("Index");
