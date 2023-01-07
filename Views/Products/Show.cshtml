@@ -36,11 +36,26 @@
 
         <dt class="col-sm-3">Categorie</dt>
         <dd class="col-sm-9">@Model.Category.Name</dd>
+
+        <dt class="col-sm-3">In stoc</dt>
+        <dd class="col-sm-3">
+            @if (Model.Stock > 0)
+            {
+                <p><span style="color:green">Da </span>(@Model.Stock buc)</p>
+            }
+            else
+            {
+                <p style="color:red">Nu</p>
+            }
+        </dd>
     </dl>
 
-    <form method="post" action="/Products/AddToCart/@Model.ProductID">
-        <button class="btn btn-primary" type="submit">Adauga in cos</button>
-    </form>
+    @if(Model.Stock > 0)
+    {
+        <form method="post" action="/Products/AddToCart/@Model.ProductID">
+            <button class="btn btn-primary" type="submit">Adauga in cos</button>
+        </form>
+    }
 </div>
 
 

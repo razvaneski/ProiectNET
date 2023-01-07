@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model StoreProject.Models.Cart
+@inject UserManager<ApplicationUser> UserManager
+
+<h3>Checkout</h3>
+<p>Produsele tale</p>
+@if(Model.CartItems != null && Model.CartItems.Count != 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nume</th>
+                <th scope="col">Cantitate</th>
+                <th scope="col">Pret</th>
+                <th scope="col">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.Price</td>
+                    <td>@(item.Product.Price * item.Quantity)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h4>Cosul tau este gol</h4>
+}
+
+<p>Adresa de livrare</p>
+<form method="post" action="/Orders/New">
+    <label>Strada si numarul</label>
+    <input type="text" name="Street"/>
+    <br />
+    <label>Oras</label>
+    <input type="text" name="City" />
+    <br />
+    <label>Judet</label>
+    <input type="text" name="County" />
+    <br />
+    <label>Cod Postal</label>
+    <input type="text" name="ZipCode" />
+    <br />
+    <label>Nume</label>
+    <input type="text" name="Name" />
+    <br />
+    <label>Numar de telefon</label>
+    <input type="text" name="PhoneNumber" />
+    <br />
+    <button class="btn btn-success" style="width:fit-content;margin-top: 50px;padding:5px" type="submit">Finalizeaza comanda</button>
+</form>
