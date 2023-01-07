@@ -145,6 +145,7 @@ namespace StoreProject.Controllers
             {
                 try
                 {
+                    db.CartItems.RemoveRange(db.CartItems.Where(ci => ci.ProductID == product.ProductID));
                     db.Reviews.RemoveRange(db.Reviews.Where(r => r.ProductID == product.ProductID));
                     db.Remove(product);
                     db.SaveChanges();
@@ -210,6 +211,46 @@ namespace StoreProject.Controllers
             else
             {
                 return Unauthorized();
+            }
+        }
+
+        [Authorize(Roles = "User,Colaborator,Admin")]
+        [HttpPost]
+        public IActionResult AddToCart(string id)
+        {
+            var product = db.Products.FirstOrDefault(prod => prod.ProductID == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            var cart = db.Carts.FirstOrDefault(c => c.UserID == _userManager.GetUserId(User));
+            if (cart == null)
+            {
+                cart = new Cart();
+                cart.CartID = Guid.NewGuid().ToString();
+                cart.UserID = _userManager.GetUserId(User);
+                db.Carts.Add(cart);
+                db.SaveChanges();
+            }
+            var cartItem = db.CartItems.FirstOrDefault(ci => ci.CartID == cart.CartID && ci.ProductID == product.ProductID);
+            if(cartItem != null)
+            {
+                cartItem.Quantity += 1;
+                db.SaveChanges();
+                TempData["Success"] = "Produs adaugat in cos.";
+                return RedirectToAction("Show", new { id = id });
+            }
+            else
+            {
+                cartItem = new CartItem();
+                cartItem.CartID = cart.CartID;
+                cartItem.Quantity = 1;
+                cartItem.ProductID = product.ProductID;
+                cartItem.CartItemID = Guid.NewGuid().ToString();
+                db.CartItems.Add(cartItem);
+                db.SaveChanges();
+                TempData["Success"] = "Produs adaugat in cos.";
+                return RedirectToAction("Show", new { id = id });
             }
         }
     }
