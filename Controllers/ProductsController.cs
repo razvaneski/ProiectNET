@@ -28,12 +28,16 @@ namespace StoreProject.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public IActionResult Index()
+        public IActionResult Index(string sortOrder, string searchString)
         {
-
             var products = db.Products.Include("Category").Where(p => p.IsAvailable == true);
 
+            ViewBag.PriceSortOrdDesc = "price_desc";
+
+            ViewBag.PriceSortOrdAsc = "price_asc";
+
             var search = "";
+
             // MOTOR DE CAUTARE
             if (Convert.ToString(HttpContext.Request.Query["search"]) != null)
             {
@@ -44,7 +48,20 @@ namespace StoreProject.Controllers
 
                 products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.IsAvailable == true).Include("Category");
             }
-            
+
+            if (sortOrder != null)
+            {
+                if (sortOrder == "price_desc")
+                {
+                    products = products.OrderByDescending(p => p.Price);
+                }
+                else if (sortOrder == "price_asc")
+                {
+                    products = products.OrderBy(p => p.Price);
+
+                }
+            }
+
             ViewBag.SearchString = search;
 
             int _perPage = 3;
@@ -66,11 +83,23 @@ namespace StoreProject.Controllers
 
             ViewBag.Products = paginatedProducts;
 
-            if (search != "")
+            if (search != "" && sortOrder == null)
             {
                 ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&page";
             }
-            else
+            else if (search != "" && sortOrder != null)
+            {
+                ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&sortOrder=" + sortOrder + "&page";
+            }
+            else if (search == "" && sortOrder == null)
+            {
+                ViewBag.PaginationBaseUrl = "/Products/Index/?page";
+            }
+            else if (sortOrder != null && search == "")
+            {
+                ViewBag.PaginationBaseUrl = "/Products/Index/?sortOrder=" + sortOrder + "&page";
+            }
+            else if (sortOrder == null && search == "")
             {
                 ViewBag.PaginationBaseUrl = "/Products/Index/?page";
             }
@@ -79,6 +108,7 @@ namespace StoreProject.Controllers
 
         }
 
+        
         [Authorize(Roles = "Colaborator,Admin")]
         public IActionResult Add()
         {

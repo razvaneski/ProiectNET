@@ -3,11 +3,29 @@
 @inject UserManager<ApplicationUser> UserManager
 
 
-<form method="GET" class="d-flex">
-    <button class="btn btn-outline-success" type="submit">Search</button>
-    <input type="text" class="form-control" placeholder="Cauta produs" name="search" value="@ViewBag.SearchString">
+<div style="display:flex; flex-direction:row; justify-content:space-between">
+    <form method="GET" class="d-flex">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+        <input type="text" class="form-control" placeholder="Cauta produs" name="search" value="@ViewBag.SearchString">
+
+    </form>
+
+    <div class="btn-group dropstart">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Sorteaza
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortOrdDesc" class="dropdown-item">Pret descrescator</a>
+            </li>
+            <li>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortOrdAsc" class="dropdown-item">Pret crescator</a>
+            </li>
+        </ul>
+    </div>
     
-</form>
+</div>
+
 <br />
 <h3 class="text-lg-center">Produse</h3>
 <br />
