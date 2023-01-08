@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace StoreProject.Models
 {
@@ -9,12 +10,16 @@ namespace StoreProject.Models
         public string ProductID { get; set; }
 
         [Required(ErrorMessage = "Produsul trebuie sa aiba un nume")]
+        [MinLength(1)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Produsul trebuie sa aiba o descriere")]
+        [MinLength(1)]
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Produsul trebuie sa aiba un pret")]
+        [Range(1, 1000000)]
+        [NotNull]
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Produsul trebuie sa apartina unei categorii")]
@@ -52,6 +57,8 @@ namespace StoreProject.Models
         }
 
         public bool IsAvailable { get; set; }
+        [Required(ErrorMessage = "Stoc invalid")] 
+        [Range(0,1000000)]
         public int Stock { get; set; }
     }
 }

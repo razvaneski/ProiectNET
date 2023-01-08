@@ -1,4 +1,5 @@
-﻿using Humanizer;
+﻿using Ganss.Xss;
+using Humanizer;
 using MessagePack;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -135,34 +136,52 @@ namespace StoreProject.Controllers
         {
             var categories = db.Categories;
             ViewBag.Categories = categories;
-            return View();
+            var product = new Product();
+            return View(product);
         }
 
         [Authorize(Roles = "Colaborator,Admin")]
         [HttpPost]
         public IActionResult Add(Product product)
         {
-            if (User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+            product.ProductID = Guid.NewGuid().ToString();
+            product.UserID = _userManager.GetUserId(User);
+            product.IsAvailable = User.IsInRole("Admin");
+
+            ModelState.ClearValidationState(nameof(product));
+            if (!TryValidateModel(product, nameof(product)))
             {
-                try
+                if (User.IsInRole("Admin") || User.IsInRole("Colaborator"))
                 {
-                    product.ProductID = Guid.NewGuid().ToString();
-                    product.UserID = _userManager.GetUserId(User);
-                    product.IsAvailable = User.IsInRole("Admin");
-                    db.Products.Add(product);
-                    db.SaveChanges();
-                    TempData["Success"] = "Produs adaugat cu succes!";
-                    return RedirectToAction("Index");
+                    try
+                    {
+                        if(product.Description != null)
+                        {
+                            var sanitizer = new HtmlSanitizer();
+                            product.Description = sanitizer.Sanitize(product.Description);
+                        }
+
+                        db.Products.Add(product);
+                        db.SaveChanges();
+                        TempData["Success"] = "Produs adaugat cu succes!";
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
+                        ViewBag.Categories = db.Categories;
+                        return View(product);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
-                    return RedirectToAction("Add");
+                    return Unauthorized();
                 }
             }
             else
             {
-                return Unauthorized();
+                ViewBag.Categories = db.Categories;
+                return View(product);
             }
         }
 
@@ -248,23 +267,43 @@ namespace StoreProject.Controllers
         public IActionResult Edit(string id, Product newProduct, [FromForm] IFormFile imageFile)
         {
             Product oldProduct = db.Products.Find(id);
+            if(oldProduct == null)
+            {
+                return NotFound();
+            }
             if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && _userManager.GetUserId(User) == oldProduct.UserID))
             {
-                try
+                oldProduct.Name = newProduct.Name;
+                oldProduct.Price = newProduct.Price;
+                oldProduct.Description = newProduct.Description;
+                oldProduct.CategoryID = newProduct.CategoryID;
+                oldProduct.Stock = newProduct.Stock;
+
+                ModelState.ClearValidationState(nameof(oldProduct));
+                if (!TryValidateModel(oldProduct, nameof(oldProduct)))
                 {
-                    oldProduct.Name = newProduct.Name;
-                    oldProduct.Price = newProduct.Price;
-                    oldProduct.Description = newProduct.Description;
-                    oldProduct.CategoryID = newProduct.CategoryID;
-                    oldProduct.Stock = newProduct.Stock;
-                    db.SaveChanges();
-                    TempData["Success"] = "Produs modificat cu succes!";
-                    return RedirectToAction("Index");
+                    try
+                    {
+                        if(oldProduct.Description != null)
+                        {
+                            var sanitizer = new HtmlSanitizer();
+                            oldProduct.Description = sanitizer.Sanitize(oldProduct.Description);
+                        }
+                        db.SaveChanges();
+                        TempData["Success"] = "Produs modificat cu succes!";
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
+                        ViewBag.Categories = db.Categories;
+                        return View(oldProduct);
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    TempData["Error"] = "A aparut o eroare, va rugam reincercati.";
-                    return RedirectToAction("Edit/{product.ProductID}");
+                    ViewBag.Categories = db.Categories;
+                    return View(oldProduct);
                 }
             }
             else
