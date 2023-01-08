@@ -29,7 +29,7 @@ namespace StoreProject.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public IActionResult Index(string sortOrder, string searchString)
+        public IActionResult Index(string sortOrder, string searchString, string categoryID)
         {
             var products = db.Products.Include("Category").Include("Reviews").Where(p => p.IsAvailable == true);
 
@@ -38,6 +38,8 @@ namespace StoreProject.Controllers
             ViewBag.PriceSortOrdAsc = "price_asc";
 
             ViewBag.RatingSortOrd = "rating";
+
+            ViewBag.Categories = db.Categories;
 
             var search = "";
 
@@ -66,6 +68,15 @@ namespace StoreProject.Controllers
                 else if(sortOrder == "rating")
                 {
                     products = products.OrderByDescending(p => p.Reviews.Average(r => r.Rating));
+                }
+            }
+
+            if(categoryID != null)
+            {
+                var category = db.Categories.FirstOrDefault(c => c.CategoryID == categoryID);
+                if (category != null)
+                {
+                    products = products.Where(p => p.CategoryID == category.CategoryID);
                 }
             }
 

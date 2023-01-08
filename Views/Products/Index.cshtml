@@ -26,6 +26,20 @@
             </li>
         </ul>
     </div>
+
+    <div class="btn-group dropstart">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Selecteaza categorie
+        </button>
+        <ul class="dropdown-menu">
+            @foreach(var category in ViewBag.Categories)
+            {
+                <li>
+                    <a asp-action="Index" asp-route-categoryID="@category.CategoryID" class="dropdown-item">@category.Name</a>
+                </li>
+            }
+        </ul>
+    </div>
     
 </div>
 
