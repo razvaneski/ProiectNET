@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Versioning;
 using StoreProject.Data;
 using StoreProject.Models;
+using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -30,11 +31,13 @@ namespace StoreProject.Controllers
         }
         public IActionResult Index(string sortOrder, string searchString)
         {
-            var products = db.Products.Include("Category").Where(p => p.IsAvailable == true);
+            var products = db.Products.Include("Category").Include("Reviews").Where(p => p.IsAvailable == true);
 
             ViewBag.PriceSortOrdDesc = "price_desc";
 
             ViewBag.PriceSortOrdAsc = "price_asc";
+
+            ViewBag.RatingSortOrd = "rating";
 
             var search = "";
 
@@ -46,7 +49,7 @@ namespace StoreProject.Controllers
                 // Cautare in articol (nume & descriere & categorie)
                 List<string> productIDs = db.Products.Where(prod => prod.Name.Contains(search) || prod.Category.Name.Contains(search) || prod.Description.Contains(search)).Select(p => p.ProductID).ToList();
 
-                products = db.Products.Where(p => productIDs.Contains(p.ProductID) && p.IsAvailable == true).Include("Category");
+                products = db.Products.Include("Category").Include("Reviews").Where(p => productIDs.Contains(p.ProductID) && p.IsAvailable == true);
             }
 
             if (sortOrder != null)
@@ -60,52 +63,59 @@ namespace StoreProject.Controllers
                     products = products.OrderBy(p => p.Price);
 
                 }
+                else if(sortOrder == "rating")
+                {
+                    products = products.OrderByDescending(p => p.Reviews.Average(r => r.Rating));
+                }
             }
 
             ViewBag.SearchString = search;
 
             int _perPage = 3;
 
-            int totalItems = products.Count();
-
-            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
-
-            var offset = 0;
-
-            if (!currentPage.Equals(0))
+            if(products != null)
             {
-                offset = (currentPage - 1) * _perPage;
-            }
+                int totalItems = products.Count();
 
-            var paginatedProducts = products.Skip(offset).Take(_perPage);
+                var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
 
-            ViewBag.LastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+                var offset = 0;
 
-            ViewBag.Products = paginatedProducts;
+                if (!currentPage.Equals(0))
+                {
+                    offset = (currentPage - 1) * _perPage;
+                }
 
-            if (search != "" && sortOrder == null)
-            {
-                ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&page";
-            }
-            else if (search != "" && sortOrder != null)
-            {
-                ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&sortOrder=" + sortOrder + "&page";
-            }
-            else if (search == "" && sortOrder == null)
-            {
-                ViewBag.PaginationBaseUrl = "/Products/Index/?page";
-            }
-            else if (sortOrder != null && search == "")
-            {
-                ViewBag.PaginationBaseUrl = "/Products/Index/?sortOrder=" + sortOrder + "&page";
-            }
-            else if (sortOrder == null && search == "")
-            {
-                ViewBag.PaginationBaseUrl = "/Products/Index/?page";
+                var paginatedProducts = products.Skip(offset).Take(_perPage);
+
+                ViewBag.LastPage = Math.Ceiling((float)totalItems / (float)_perPage);
+
+                ViewBag.Products = paginatedProducts;
+
+                if (search != "" && sortOrder == null)
+                {
+                    ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&page";
+                }
+                else if (search != "" && sortOrder != null)
+                {
+                    ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&sortOrder=" + sortOrder + "&page";
+                }
+                else if (search == "" && sortOrder == null)
+                {
+                    ViewBag.PaginationBaseUrl = "/Products/Index/?page";
+                }
+                else if (sortOrder != null && search == "")
+                {
+                    ViewBag.PaginationBaseUrl = "/Products/Index/?sortOrder=" + sortOrder + "&page";
+                }
+                else if (sortOrder == null && search == "")
+                {
+                    ViewBag.PaginationBaseUrl = "/Products/Index/?page";
+                }
+
             }
 
             return View();
-
         }
 
         

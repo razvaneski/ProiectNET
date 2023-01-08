@@ -31,6 +31,7 @@ namespace StoreProject.Models
 
         public virtual ICollection<Review>? Reviews { get; set; }
         public byte[]? Image { get; set; }
+
         [NotMapped]
         public double Rating
         {
