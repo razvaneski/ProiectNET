@@ -5,31 +5,42 @@
 
 <br/>
 
-<form method="post" action="/Products/Add" class="d-flex flex-column" style="width:70%; gap:5px">
-    <label>Nume produs</label>
-    <input type="text" name="Name" value="@Model.Name"/>
+<form method="post" action="/Products/Add" class="d-flex flex-column" style="gap:2rem">
+
+    <div style="display:flex; flex-direction:row">
+        <label class="col-sm-2 col-form-label">Nume produs</label>
+        <input type="text" name="Name" class="col-sm-10" />
+    </div>
     @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger"})
+    <div style="display:flex; flex-direction:column; gap:2rem">
+        <div style="display:flex; flex-direction:row">
+            <label class="col-sm-2 col-form-label" style=" margin-right:2px">Pret</label>
+            <input type="number" name="Price" class="col-sm-10" style="width:5rem" />
+        </div>
+        @Html.ValidationMessageFor(m => m.Price, null, new { @class = "text-danger"})
+
+        <div style="display:flex; flex-direction:row">
+            <label class="col-sm-2 col-form-label" style=" margin-right:2px">Stoc</label>
+            <input type="number" name="Stock" value="0" class="col-sm-10" style="width:5rem" />
+        </div>
+        @Html.ValidationMessageFor(m => m.Stock, null, new { @class = "text-danger"})
+
+        <div style="display:flex; flex-direction:row">
+            <label style="margin-right:7.5rem">Categorie</label>
+            <select name="CategoryID">
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <option value="@category.CategoryID">@category.Name</option>
+                }
+            </select>
+        </div>
+    </div>
     
-    <label>Descriere</label>
+
+    
+    <h5>Descriere</h5>
     @Html.TextAreaFor(m => m.Description, new { @class = "summernote" })
     @Html.ValidationMessageFor(m => m.Description, null, new { @class = "text-danger"})
-    <div>
-        <label>Pret</label>
-        <input type="number" name="Price" />
-    </div>
-    @Html.ValidationMessageFor(m => m.Price, null, new { @class = "text-danger"})
-    <label>Stoc</label>
-    <input type="number" name="Stock" value="0"/>
-    @Html.ValidationMessageFor(m => m.Stock, null, new { @class = "text-danger"})
-    <div>
-        <label>Categorie</label>
-        <select name="CategoryID">
-            @foreach (var category in ViewBag.Categories)
-            {
-                <option value="@category.CategoryID">@category.Name</option>
-            }
-        </select>
-    </div>
     
 
     <button class="btn btn-success" style="width:fit-content;margin-top: 50px;padding:5px" type="submit">Adauga produs</button>

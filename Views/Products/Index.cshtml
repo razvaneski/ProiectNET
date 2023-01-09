@@ -4,47 +4,50 @@
 
 
 <div style="display:flex; flex-direction:row; justify-content:space-between">
+
+    <div class="d-flex flex-row" style="gap:4px">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Sorteaza dupa
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortOrdDesc" class="dropdown-item">Pret descrescator</a>
+                </li>
+                <li>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortOrdAsc" class="dropdown-item">Pret crescator</a>
+                </li>
+                <li>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewBag.RatingSortOrd" class="dropdown-item">Cel mai bun rating</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class ="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Selecteaza categorie
+            </button>
+            <ul class="dropdown-menu">
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <li>
+                        <a asp-action="Index" asp-route-categoryID="@category.CategoryID" class="dropdown-item">@category.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
     <form method="GET" class="d-flex">
         <button class="btn btn-outline-success" type="submit">Search</button>
         <input type="text" class="form-control" placeholder="Cauta produs" name="search" value="@ViewBag.SearchString">
 
     </form>
-
-    <div class="btn-group dropstart">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Sorteaza
-        </button>
-        <ul class="dropdown-menu">
-            <li>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortOrdDesc" class="dropdown-item">Pret descrescator</a>
-            </li>
-            <li>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.PriceSortOrdAsc" class="dropdown-item">Pret crescator</a>
-            </li>
-            <li>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.RatingSortOrd" class="dropdown-item">Cel mai bun rating</a>
-            </li>
-        </ul>
-    </div>
-
-    <div class="btn-group dropstart">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Selecteaza categorie
-        </button>
-        <ul class="dropdown-menu">
-            @foreach(var category in ViewBag.Categories)
-            {
-                <li>
-                    <a asp-action="Index" asp-route-categoryID="@category.CategoryID" class="dropdown-item">@category.Name</a>
-                </li>
-            }
-        </ul>
-    </div>
+    
     
 </div>
 
 <br />
-<h3 class="text-lg-center">Produse</h3>
+<h1 class="text-lg-center" style="margin-top:10px; margin-bottom:10px" >Produse</h1>
 <br />
 <div class="d-flex flex-wrap justify-content-center">
     @foreach (var product in ViewBag.Products)
@@ -103,10 +106,3 @@
         </ul>
     </nav>
 </div>
-
-@if(User.IsInRole("Admin") || User.IsInRole("Colaborator"))
-{
-    <div class="d-flex flex-column justify-content-center">
-        <a class="btn btn-primary" href="/Products/Add" style="width: 10rem">Adauga produs</a>
-    </div>
-}

@@ -3,26 +3,31 @@
 @model StoreProject.Models.ApplicationUser
 @inject UserManager<ApplicationUser> UserManager
 
-<h3>@Model.Email</h3>
 
-<form method="post" action="/Users/Edit/@Model.Id">
-    <label>Email</label>
-    <input type="text" name="Email" value="@Model.Email"/>
-    <br />
-    
-    <label>Numar de telefon</label>
-    <input type="tel" name="PhoneNumber" value="@Model.PhoneNumber"/>
-    <br />
-    <br />
+<h3><i class="bi bi-person"></i> @Model.Email</h3>
+<br />
 
-    <button type="submit">Confirma datele</button>
+<form method="post" action="/Users/Edit/@Model.Id" style="padding:2rem; border-bottom: 1px solid black">
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+            <input type="text" name="Email" value="@Model.Email" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-2 col-form-label">Numar de telefon</label>
+        <div class="col-sm-10">
+            <input type="tel" name="PhoneNumber" value="@Model.PhoneNumber" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Confirma datele</button>
 </form>
 <br />
 @if(User.IsInRole("Admin"))
 {
-    <form method="post" action="/Users/ChangeRole">
-        <label>Adauga rol</label>
-        <select name="role">
+    <form method="post" action="/Users/ChangeRole" class="d-flex flex-row gap-3" style="padding:2rem; border-bottom: 1px solid black">
+        <label class="form-label" style="align-self:end; margin:0; padding:0; font-size:large">Rol user</label>
+        <select name="role" class="form-select" style="width:10%">
             @foreach (var role in ViewBag.Roles)
             {
                 @if(role.Name == ViewBag.UserRoles[0])
@@ -36,10 +41,11 @@
             }
         </select>
         <input type="hidden" name="id" value="@Model.Id" />
-        <button type="submit">Adauga rol</button>
+        <button type="submit" class="btn btn-primary" style="width:fit-content">Schimba rol</button>
+        
     </form>
     <br />
 }
 <form method="post" action="/Users/Delete/@Model.Id">
-    <button type="submit">Sterge contul</button>    
+    <button type="submit" class="btn btn-danger" style="margin:2rem"><i class="bi bi-person-x-fill"></i> Sterge cont</button>
 </form>

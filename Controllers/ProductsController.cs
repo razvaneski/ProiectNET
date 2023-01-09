@@ -104,23 +104,19 @@ namespace StoreProject.Controllers
 
                 ViewBag.Products = paginatedProducts;
 
-                if (search != "" && sortOrder == null)
+                if (search != "" && sortOrder == null && categoryID == null)
                 {
                     ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&page";
                 }
-                else if (search != "" && sortOrder != null)
-                {
-                    ViewBag.PaginationBaseUrl = "/Products/Index/?search=" + search + "&sortOrder=" + sortOrder + "&page";
-                }
-                else if (search == "" && sortOrder == null)
-                {
-                    ViewBag.PaginationBaseUrl = "/Products/Index/?page";
-                }
-                else if (sortOrder != null && search == "")
+                else if (sortOrder != null && search == "" && categoryID == null)
                 {
                     ViewBag.PaginationBaseUrl = "/Products/Index/?sortOrder=" + sortOrder + "&page";
                 }
-                else if (sortOrder == null && search == "")
+                else if (categoryID != null && sortOrder == null && search == "")
+                {
+                    ViewBag.PaginationBaseUrl = "/Products/Index/?categoryID=" + categoryID + "&page";
+                }
+                else if (search == "" && sortOrder == null && categoryID == null)
                 {
                     ViewBag.PaginationBaseUrl = "/Products/Index/?page";
                 }

@@ -21,15 +21,15 @@
 
             <dt class="col-sm-3">Trimis de catre</dt>
             <dd class="col-sm-9">@ViewBag.Email</dd>
-
-            <dt class="col-sm-3">Descriere</dt>
-            <dd class="col-sm-9">@Model.Description</dd>
-
+    
             <dt class="col-sm-3">Pret</dt>
             <dd class="col-sm-9">@Model.Price</dd>
 
             <dt class="col-sm-3">Categorie</dt>
             <dd class="col-sm-9">@Model.Category.Name</dd>
+
+            <dt class="col-sm-3">Descriere</dt>
+            <dd class="col-sm-9">@Html.Raw(Model.Description)</dd>
         </dl>
         <div class ="d-flex flex-row justify-content-sm-end" style="padding:10px; gap:2px">
             <form method="post" action="/Requests/Delete/@Model.ProductID">

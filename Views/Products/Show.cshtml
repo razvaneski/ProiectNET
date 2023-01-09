@@ -2,18 +2,18 @@
 @model StoreProject.Models.Product
 @inject UserManager<ApplicationUser> UserManager
 
-<div class="d-flex flex-row">
-    <div>
+<div class="d-flex flex-row" style="border: 2px solid rgb(169, 195, 196); border-radius:5px; width:100%">
+    <div style="width:35%">
         @if(Model.Image != null)
         {
-            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)" class="img-fluid rounded-start" alt="/images/coming_soon_img.jpg" style="height:100%" />
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.Image)" class="img-fluid rounded-start" alt="/images/coming_soon_img.jpg" style="height:100%; width:100%" />
         }
         else
         {
-            <img src=@("/images/"+Model.Category.Name+".jpg") class="img-fluid rounded-start" alt="/images/coming_soon_img.jpg" style="height:100%">
+            <img src=@("/images/"+Model.Category.Name+".jpg") class="img-fluid rounded-start" alt="/images/coming_soon_img.jpg" style="height:100%; width:100%">
         }
     </div>
-    <div class="d-flex flex-column justify-content-around border border-1" style="width:170%">
+    <div class="d-flex flex-column justify-content-around border border-1" style="width:65%">
 
         <h3 style="padding:10px">@Model.Name</h3>
 
@@ -52,88 +52,97 @@
             @if (User.IsInRole("User") || User.IsInRole("Admin") || User.IsInRole("Colaborator"))
             {
                 <form method="post" action="/Products/AddToCart/@Model.ProductID">
-                    <button class="btn btn-primary" type="submit">Adauga in cos</button>
+                    <button class="btn btn-primary" type="submit">Adauga in cos <i class="bi bi-cart-plus"></i></button>
                 </form>
             }
             @if (User.IsInRole("Admin") || (User.IsInRole("Colaborator") && UserManager.GetUserId(User) == Model.UserID))
             {
 
                 <form method="post" action="/Products/Delete/@Model.ProductID">
-                    <button class="btn btn-danger" type="submit">Sterge produs</button>
+                    <button class="btn btn-danger" type="submit">Sterge produs <i class="bi bi-trash"></i></button>
                 </form>
-                <a class="btn btn-primary" href="/Products/Edit/@Model.ProductID"><i class="bi bi-pencil-square"></i>Editeaza</a>
+                <a class="btn btn-primary" href="/Products/Edit/@Model.ProductID">Editeaza <i class="bi bi-pencil-square"></i></a>
 
             }
         </div>
     </div>
 </div>
+
 <br />
 
+@if (User.IsInRole("User") || User.IsInRole("Admin") || User.IsInRole("Colaborator"))
+{
 
+    @if (Model.Rating == 0)
+    {
+        <div style="width:100%; height:100%; padding:2rem; background-color:rgb(169, 195, 196); border: 2px solid rgb(169, 195, 196); border-radius:5px">
+            <div class="d-flex flex-column" style="width: 70%; background-color:white; border: 2px solid white; border-radius:5px;padding:2rem">
+                <h3>Fii primul care lasa o recenzie</h3>
+                <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
+
+                    <div>
+                        <label>Nota</label>
+                        <input type="number" name="Rating" min="1" max="5" value="5" />
+                    </div>
+
+                    <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
+
+                    <textarea name="Content" placeholder="Text" rows="3"></textarea>
+
+                    <button type="submit">Adauga recenzie</button>
+                </form>
+            </div>
+            
+        </div>
+
+    }
+    else
+    {
+        <div style="width:100%; height:100%; padding:2rem; background-color:rgb(223, 237, 235); border: 2px solid rgb(169, 195, 196); border-radius:5px">
+            <div class="d-flex flex-column" style="width: 70%; background-color:white; border: 2px solid white; border-radius:5px;padding:2rem">
+                <h3>Lasa o recenzie</h3>
+                <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit;">
+
+                    <div>
+                        <label>Nota</label>
+                        <input type="number" name="Rating" min="1" max="5" value="5" />
+                    </div>
+
+                    <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
+
+                    <textarea name="Content" placeholder="Text" rows="3"></textarea>
+
+                    <button type="submit">Adauga recenzie</button>
+                </form>
+            </div>
+
+        </div>
+    }
+}
+else
+{
+    <h4>Pentru a lasa o recenzie trebuie sa va logati mai intai</h4>
+}
+
+<br />
 
 @if(Model.Rating != 0)
 {
-    <div class="d-flex flex-column border border-1" style="background-color:rgb(223, 237, 235);padding: 10px; margin-bottom: 30px; margin-top: 30px">
+    <div class="d-flex flex-column" style="background-color:rgb(223, 237, 235); padding: 2rem; margin-bottom: 30px; border: 2px solid rgb(169, 195, 196); border-radius:5px">
         <h1>Recenzii</h1>
         @foreach (var review in Model.Reviews)
         {
-            <div class="border border-1" style="background-color:aliceblue;margin: 5px; padding: 20px">
+            <div style="background-color:aliceblue; margin: 5px; padding: 20px; border: 1px solid aliceblue; border-radius:5px">
                 <p style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: bold"><span style="text-decoration: underline; text-transform: uppercase">@review.Title</span> (@review.Rating / 5 ⭐)</p>
                 <p>@review.Content</p>
                 @if (User.IsInRole("Admin") || UserManager.GetUserId(User) == review.UserID)
                 {
                     <form method="post" action="/Reviews/Delete/@review.ReviewID">
-                        <button tyoe="submit" class="btn btn-danger">Sterge recenzie</button>
+                        <button tyoe="submit" class="btn btn-danger">Sterge recenzie <i class="bi bi-trash"></i></button>
                     </form>
                 }
             </div>
         }
     </div>
     
-}
-   
-@if (User.IsInRole("User") || User.IsInRole("Admin") || User.IsInRole("Colaborator"))
-{
-
-    @if (Model.Rating == 0)
-    {
-        <div class="d-flex flex-column" style="width: 60%">
-            <h3>Fii primul care lasa o recenzie</h3>
-            <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
-
-                <div>
-                    <label>Nota</label>
-                    <input type="number" name="Rating" min="1" max="5" value="5" />
-                </div>
-
-                <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
-
-                <textarea name="Content" placeholder="Text" rows="3"></textarea>
-
-                <button type="submit">Adauga recenzie</button>
-            </form>
-        </div>
-
-    }
-    else
-    {
-        <div class="d-flex flex-column" style="width: 60%">
-            <h3>Lasa o recenzie</h3>
-            <form method="post" action="/Reviews/Add/@Model.ProductID" class="d-flex flex-column gap-2" style="width: inherit">
-                <div>
-                    <label>Nota</label>
-                    <input type="number" name="Rating" min="1" max="5" value="5" />
-                </div>
-
-
-                <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
-
-                <textarea name="Content" placeholder="Text" rows="3"></textarea>
-
-                <button type="submit">Adauga recenzie</button>
-            </form>
-        </div>
-    }
-}else{
-    <h4>Pentru a lasa o recenzie trebuie sa va logati mai intai</h4>
 }

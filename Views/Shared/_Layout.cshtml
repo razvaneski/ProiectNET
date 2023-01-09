@@ -12,17 +12,14 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg bg-light" style="margin-bottom: 20px">
+        <nav class="navbar navbar-expand-lg bg-light" style="margin-bottom: 30px">
             <div class="container-fluid">
                 <a class="navbar-brand font-logo" asp-area="" asp-controller="Home" asp-action="Index">StoreProject</a>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Produse</a>
-                        </li>
-                        <li class="nav-item">
-                            @if (User.IsInRole("User"))
+                            @if (User.IsInRole("User") || User.IsInRole("Admin") || User.IsInRole("Colaborator"))
                             {
                                 <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
                                     <i class="bi bi-cart"></i>
@@ -30,16 +27,51 @@
                             }
                         </li>
 
-                        @if(User.IsInRole("Admin")){
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Vezi si
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Utilizatori</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Requests" asp-action="Index">Cereri de adaugare produs</a></li>
-                                </ul>
-                            </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Produse</a>
+                        </li>
+                       
+                        @if (User.IsInRole("Admin") || User.IsInRole("Colaborator") || User.IsInRole("User"))
+                        {
+                            if (User.IsInRole("User"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Vezi si
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Orders" asp-action="Index"><i class="bi bi-bag-heart-fill"></i> Comenzile tale</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else if (User.IsInRole("Colaborator"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Vezi si
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Orders" asp-action="Index"><i class="bi bi-bag-heart-fill"></i> Comenzile tale</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Products" asp-action="Add"><i class="bi bi-plus-lg"></i> Adauga produs</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Vezi si
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Orders" asp-action="Index"><i class="bi bi-bag-heart-fill"></i> Comenzile tale</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index"><i class="bi bi-people-fill"></i> Utilizatori</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Categories" asp-action="Index"><i class="bi bi-card-list"></i> Categorii</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Requests" asp-action="Index"><i class="bi bi-card-heading"></i> Cereri produs</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Products" asp-action="Add"><i class="bi bi-plus-lg"></i> Adauga produs</a></li>
+
+                                    </ul>
+                                </li>
+                            }
                         }
                     </ul>
                     <partial name="_LoginPartial" />

@@ -108,7 +108,8 @@ namespace StoreProject.Controllers
             {
                 return View(cart);
             }
-            return NotFound();
+
+            return RedirectToAction("Index", "Cart");
         }
     }
 }

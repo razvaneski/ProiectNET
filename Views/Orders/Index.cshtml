@@ -2,16 +2,16 @@
 @model List<StoreProject.Models.Order>
 @inject UserManager<ApplicationUser> UserManager
 
-<h3>Comenzile tale</h3>
+<h3 class="text-lg-center" style="margin-top:5rem; margin-bottom:8rem">Comenzile tale <i class="bi bi-bag-heart-fill"></i></h3>
 
 @if (Model != null && Model.Count != 0)
 {
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">Data</th>
+                <th scope="col">Data plasare</th>
                 <th scope="col">Adresa</th>
-                <th scope="col">Pret</th>
+                <th scope="col">Pret total</th>
             </tr>
         </thead>
         <tbody>

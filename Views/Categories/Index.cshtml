@@ -2,26 +2,21 @@
 @model List<StoreProject.Models.Category>
 @inject UserManager<ApplicationUser> UserManager
 
-<h3>Categorii</h3>
 
-<table>
-    <thead>
-        <tr>
-            <th scope="col">Nume</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>
-                    <a href="/Categories/Remove/@item.CategoryID" style="text-decoration:none"><i class="bi bi-trash"></i></a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="d-flex flex-column gap-3">
+    <h3>Categorii</h3>
+    <a href="/Categories/New" class="btn btn-primary" style="width:fit-content"><i class="bi bi-plus-lg"></i> Adauga categorie</a>
+</div>
+
 <br />
-<a href="/Categories/New" class="btn-primary">Adauga categorie</a>
+
+<div class="d-flex flex-column">
+    @foreach (var item in Model)
+    {
+        <div class="d-flex flex-row justify-content-between" style="width:15%">
+            <p style="font-size:large; padding:4px">@item.Name</p>
+            <p><a href="/Categories/Remove/@item.CategoryID" class="btn btn-outline-danger"><i class="bi bi-trash"></i></a></p>
+        </div>
+    }
+    
+</div>
