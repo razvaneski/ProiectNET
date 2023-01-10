@@ -83,11 +83,14 @@
                     <div>
                         <label>Nota</label>
                         <input type="number" name="Rating" min="1" max="5" value="5" />
+                        @Html.ValidationMessage("Rating", "", new { @class = "text-danger" })
                     </div>
 
                     <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
+                    @Html.ValidationMessage("Title", "", new { @class = "text-danger" })
 
                     <textarea name="Content" placeholder="Text" rows="3"></textarea>
+                    @Html.ValidationMessage("Content", "", new { @class = "text-danger" })
 
                     <button type="submit">Adauga recenzie</button>
                 </form>
@@ -106,11 +109,14 @@
                     <div>
                         <label>Nota</label>
                         <input type="number" name="Rating" min="1" max="5" value="5" />
+                        @Html.ValidationMessage("Rating", "", new { @class = "text-danger" })
                     </div>
 
                     <input type="text" name="Title" placeholder="Dati un titlu sugestiv recenziei" />
+                    @Html.ValidationMessage("Title", "", new { @class = "text-danger" })
 
                     <textarea name="Content" placeholder="Text" rows="3"></textarea>
+                    @Html.ValidationMessage("Content", "", new { @class = "text-danger" })
 
                     <button type="submit">Adauga recenzie</button>
                 </form>

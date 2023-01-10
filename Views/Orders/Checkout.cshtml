@@ -31,43 +31,49 @@
 
 <h4 style="margin-top:5rem">Completeaza adresa de livrare</h4>
 <br />
-<form method="post" action="/Orders/New">
+<form method="post" action="/Orders/Checkout">
 
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">Strada si numarul</label>
         <div class="col-sm-10">
             <input type="text" name="Street" />
         </div>
+        @Html.ValidationMessage("Street", "", new { @class = "text-danger" })
     </div>
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">Oras</label>
         <div class="col-sm-10">
             <input type="text" name="City" />
         </div>
+        @Html.ValidationMessage("City", "", new { @class = "text-danger" })
     </div>
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">Judet</label>
         <div class="col-sm-10">
             <input type="text" name="County" />
         </div>
+        @Html.ValidationMessage("County", "", new { @class = "text-danger" })
     </div>
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">Cod Postal</label>
         <div class="col-sm-10">
             <input type="text" name="ZipCode" />
         </div>
+        @Html.ValidationMessage("ZipCode", "", new { @class = "text-danger" })
     </div>
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">Nume</label>
         <div class="col-sm-10">
             <input type="text" name="Name" />
         </div>
+        @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
     </div>
     <div class="row mb-3">
         <label class="col-sm-2 col-form-label">Numar de telefon</label>
         <div class="col-sm-10">
             <input type="text" name="PhoneNumber" />
         </div>
+        @Html.ValidationMessage("PhoneNumber", "", new { @class = "text-danger" })
     </div>
 
     <button class="btn btn-success" style="width:fit-content;margin-top: 50px;padding:5px" type="submit">Finalizeaza comanda</button>

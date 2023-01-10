@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model List<StoreProject.Models.CartItem>
 @inject UserManager<ApplicationUser> UserManager
 
 <h3>Adauga categorie</h3>
@@ -9,6 +8,8 @@
     <br />
     <br />
     <input type="text" name="Name" style="padding:4px"/>
-    
+    <br />
+    @Html.ValidationMessage("Name", "", new { @class = "text-danger" })
+    <br />
     <button type="submit" class="btn btn-outline-success">Adauga</button>
 </form>
