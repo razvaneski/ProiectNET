@@ -72,10 +72,17 @@ namespace StoreProject.Controllers
         [HttpPost]
         public IActionResult New(Category category)
         {
-            category.CategoryID = new Guid().ToString();
-            db.Categories.Add(category);
-            db.SaveChanges();
-            TempData["Success"] = "Categoria a fost adaugata cu succes.";
+            try
+            {
+                category.CategoryID = new Guid().ToString();
+                db.Categories.Add(category);
+                db.SaveChanges();
+                TempData["Success"] = "Categoria a fost adaugata cu succes.";
+            }
+            catch
+            {
+                return View();
+            }
             return RedirectToAction("Index");
         }
     }

@@ -51,46 +51,55 @@ namespace StoreProject.Controllers
 
         [Authorize(Roles = "User,Colaborator,Admin")]
         [HttpPost]
-        public IActionResult New(Address address)
+        public IActionResult Checkout(Address address)
         {
 
             var cart = db.Carts.FirstOrDefault(c => c.UserID == _userManager.GetUserId(User));
             if (cart != null)
             {
-                address.AddressID = Guid.NewGuid().ToString();
-                db.Addresses.Add(address);
-                db.SaveChanges();
-                
-                var newOrder = new Order();
-                newOrder.OrderID = Guid.NewGuid().ToString();
-                newOrder.UserID = _userManager.GetUserId(User);
-                newOrder.OrderDate = DateTime.Now;
-                newOrder.AddressID = address.AddressID;
-
-                var cartItems = db.CartItems.Include("Product").Where(ci => ci.CartID == cart.CartID);
-                if (cartItems != null)
+                try
                 {
-                    newOrder.OrderItems = new List<OrderItem>();
-                    foreach (var cartItem in cartItems)
-                    {
-                        var orderItem = new OrderItem();
-                        orderItem.OrderItemID = Guid.NewGuid().ToString();
-                        orderItem.OrderID = newOrder.OrderID;
-                        orderItem.Quantity = cartItem.Quantity;
-                        orderItem.ProductPrice = cartItem.Product.Price;
-                        orderItem.ProductName = cartItem.Product.Name;
-                        newOrder.OrderItems.Add(orderItem);
-
-                        cartItem.Product.Stock -= cartItem.Quantity;
-                        db.CartItems.Remove(cartItem);
-                    }
-                    db.Orders.Add(newOrder);
+                    address.AddressID = Guid.NewGuid().ToString();
+                    db.Addresses.Add(address);
                     db.SaveChanges();
-                    TempData["Success"] = "Comanda plasata.";
+
+                    var newOrder = new Order();
+                    newOrder.OrderID = Guid.NewGuid().ToString();
+                    newOrder.UserID = _userManager.GetUserId(User);
+                    newOrder.OrderDate = DateTime.Now;
+                    newOrder.AddressID = address.AddressID;
+
+                    var cartItems = db.CartItems.Include("Product").Where(ci => ci.CartID == cart.CartID);
+                    if (cartItems != null)
+                    {
+                        newOrder.OrderItems = new List<OrderItem>();
+                        foreach (var cartItem in cartItems)
+                        {
+                            var orderItem = new OrderItem();
+                            orderItem.OrderItemID = Guid.NewGuid().ToString();
+                            orderItem.OrderID = newOrder.OrderID;
+                            orderItem.Quantity = cartItem.Quantity;
+                            orderItem.ProductPrice = cartItem.Product.Price;
+                            orderItem.ProductName = cartItem.Product.Name;
+                            newOrder.OrderItems.Add(orderItem);
+
+                            cartItem.Product.Stock -= cartItem.Quantity;
+                            db.CartItems.Remove(cartItem);
+                        }
+                        db.Orders.Add(newOrder);
+                        db.SaveChanges();
+                        TempData["Success"] = "Comanda plasata.";
+                    }
+                    else
+                    {
+                        TempData["Error"] = "Cosul este gol.";
+                        return RedirectToAction("Index");
+                    }
                 }
-                else
+                catch
                 {
-                    TempData["Error"] = "Cosul este gol.";
+                    TempData["Error"] = "A aparut o eroare.";
+                    return View(cart);
                 }
             }
             else
@@ -106,7 +115,17 @@ namespace StoreProject.Controllers
             var cart = db.Carts.Include("CartItems").Include("CartItems.Product").FirstOrDefault(c => c.UserID == _userManager.GetUserId(User));
             if(cart != null)
             {
-                return View(cart);
+                if (cart.CartItems != null && cart.CartItems.Count > 0)
+                {
+                    foreach (var cartItem in cart.CartItems)
+                    {
+                        if (cartItem.Product.Stock < cartItem.Quantity)
+                        {
+                            return RedirectToAction("Index", "Cart");
+                        }
+                    }
+                    return View(cart);
+                }
             }
 
             return RedirectToAction("Index", "Cart");
